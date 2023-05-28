@@ -1,0 +1,11 @@
+.myInput{
+    padding: 10px;
+    margin: 0px;
+    border: 1px solid #000000;
+    border-radius: 15px;
+
+    font-family: 'Inter';
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 27px;
+}
