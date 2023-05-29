@@ -1,0 +1,43 @@
+.my-page-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.centered-content {
+    text-align: center;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.button-group {
+    margin-top: 20px;
+}
+
+.parentDiv {
+    margin: 1rem;
+    text-align: center;
+}
+.childDiv {
+    display: inline-block;
+    padding: 1rem 1rem;
+    vertical-align: middle;
+    width: 200px;
+}
+
+.childDiv label, .inputDiv label {
+    font-size: 20px;
+}
+
+.largeInput {
+    width: 120px;
+    height: 40px;
+    font-size: 17px;
+}
+
+.inputDiv {
+    margin: 20px;
+}
