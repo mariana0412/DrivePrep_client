@@ -35,8 +35,8 @@
     margin: 0;
 }
 
-.loginImg {
-    width: 20%;
+.loginImg, .logoutImg {
+    width: 15%;
     margin: 0;
 }
 
