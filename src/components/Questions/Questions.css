@@ -21,12 +21,16 @@
     color: white;
 }
 
-.question-number.correct {
+.question-number.correct, .answer-label.correct {
     background-color: #188C34;
 }
 
-.question-number.incorrect {
+.question-number.incorrect, .answer-label.incorrect {
     background-color: #A42E43;
+}
+
+.answer-label.correct, .answer-label.incorrect {
+    color: white;
 }
 
 .question-numbers {
@@ -96,4 +100,35 @@
 .question {
     text-align: left;
     width: 75%;
+}
+
+.variants {
+    margin-top: 20px;
+    margin-left: -40px;
+}
+
+.variant {
+    text-decoration: none;
+    list-style: none;
+    color: #2d264b;
+    font-size: 16px;
+    background: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 16px;
+    padding: 11px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.variant .selected-answer {
+    background: #ffd6ff;
+    border: 1px solid #800080;
+}
+
+.variant.answer-label.correct {
+    background-color: #188C34;
+}
+
+.variant.answer-label.incorrect {
+    background-color: #A42E43;
 }

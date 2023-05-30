@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import "./Questions.css";
 import AppNavbar from "../AppNavbar/AppNavbar";
 import MyButton from "../UI/button/MyButton";
-import {Form, FormGroup, Input, Label} from "reactstrap";
 import ThemesList from "./ThemesList";
 
 const Questions = () => {
@@ -15,56 +14,47 @@ const Questions = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [showPrevArrow, setShowPrevArrow] = useState(false);
     const [showNextArrow, setShowNextArrow] = useState(true);
-    const [selectedThemeId, setSelectedThemeId] = useState('all');
+    const [selectedThemeId, setSelectedThemeId] = useState("all");
+    const [isAnswerChecked, setIsAnswerChecked] = useState(false);
 
     useEffect(() => {
         /*TODO: fetch question according to chosen complexity if it was chosen*/
         let url = `/questions`;
-        if(selectedThemeId !== 'all')
-            url += `?themeId=${selectedThemeId}`
+        if (selectedThemeId !== "all") url += `?themeId=${selectedThemeId}`;
         fetch(url)
             .then((response) => response.json())
             .then((data) => setQuestions(data));
     }, [selectedThemeId]);
 
     const handleQuestionClick = (index) => {
+        setIsAnswerChecked(false);
         setSelectedOption("");
         setCurrentQuestionIndex(currentPage * questionsPerPage + index);
     };
 
     const handleNextQuestion = () => {
-        if (currentQuestionIndex < questions.length - 1) {
-            checkAnswer();
+        if (currentQuestionIndex < questions.length - 1)
             setCurrentQuestionIndex(currentQuestionIndex + 1);
-        }
-        /* TODO: handle case when this question is the last in the theme. maybe, don't show button 'Next' then
-        *  TODO: or refer to 1st question of the next theme */
+        setIsAnswerChecked(false);
     };
 
     const handleThemeClick = (themeId) => {
         setSelectedThemeId(themeId);
         setCurrentQuestionIndex(0);
         setCurrentPage(0);
+        setAnswersCorrect({});
     };
 
-    const checkAnswer = () => {
-        const isCorrect = selectedOption === currentQuestion.answer;
+    const checkAnswer = (item) => {
+        if(isAnswerChecked)
+            return;
+        const isCorrect = item === currentQuestion.answer;
         setAnswersCorrect({
             ...answersCorrect,
             [currentQuestionIndex]: isCorrect,
         });
-    };
-
-    const handleOptionChange = (event) => setSelectedOption(event.target.value);
-
-    const goToPreviousPage = () => {
-        if (currentPage > 0)
-            setCurrentPage(currentPage - 1);
-    };
-
-    const goToNextPage = () => {
-        if (currentPage < Math.ceil(questions.length / questionsPerPage) - 1)
-            setCurrentPage(currentPage + 1);
+        setIsAnswerChecked(true);
+        setSelectedOption(item);
     };
 
     const renderQuestions = () => {
@@ -82,11 +72,18 @@ const Questions = () => {
                 {pageQuestions.map((question, index) => (
                     <div
                         key={question.id}
-                        className={
-                        `question-number 
-                        ${startIndex + index === currentQuestionIndex ? "active" : ""}
+                        className={`question-number 
+                        ${
+                            startIndex + index === currentQuestionIndex
+                                ? "active"
+                                : ""
+                        }
                         ${answersCorrect[startIndex + index] ? "correct" : ""}
-                        ${answersCorrect[startIndex + index] === false ? "incorrect" : ""}`}
+                        ${
+                            answersCorrect[startIndex + index] === false
+                                ? "incorrect"
+                                : ""
+                        }`}
                         onClick={() => handleQuestionClick(index)}
                     >
                         {startIndex + index + 1}
@@ -101,6 +98,16 @@ const Questions = () => {
         );
     };
 
+    const goToPreviousPage = () => {
+        if (currentPage > 0)
+            setCurrentPage(currentPage - 1);
+    };
+
+    const goToNextPage = () => {
+        if (currentPage < Math.ceil(questions.length / questionsPerPage) - 1)
+            setCurrentPage(currentPage + 1);
+    };
+
     useEffect(() => {
         if (questions.length <= questionsPerPage) {
             setShowPrevArrow(false);
@@ -110,6 +117,30 @@ const Questions = () => {
             setShowNextArrow(currentPage < Math.ceil(questions.length / questionsPerPage) - 1);
         }
     }, [currentPage, questions.length]);
+
+    const variants = () =>  [currentQuestion.var1, currentQuestion.var2, currentQuestion.var3];
+
+    const renderVariants = () => {
+        return variants().map((item) => {
+            const variantClass = `variant answer-label ${
+                selectedOption === item && answersCorrect[currentQuestionIndex]
+                    ? 'correct'
+                    : selectedOption === item && answersCorrect[currentQuestionIndex] === false
+                        ? 'incorrect'
+                        : ''
+            }`;
+
+            return (
+                <li
+                    key={item}
+                    className={variantClass}
+                    onClick={() => checkAnswer(item)}
+                >
+                    {item}
+                </li>
+            );
+        });
+    };
 
     return (
         <div>
@@ -121,7 +152,7 @@ const Questions = () => {
             <div className="parentDiv">
                 <div className="childDiv question">
                     {currentQuestion && (
-                        <Form className="question-container">
+                        <form className="question-container">
                             <div className="question-content">
                                 <h3>{currentQuestion.text}</h3>
                                 {/*TODO: think about how to display images*/}
@@ -133,38 +164,19 @@ const Questions = () => {
                                     />
                                 )}
                             </div>
-                            <FormGroup>
-                                <Input type="radio" id="var1" name="answer"
-                                    value={currentQuestion.var1}
-                                    checked={selectedOption === currentQuestion.var1}
-                                    onChange={handleOptionChange}
-                                />
-                                <Label for="var1">{currentQuestion.var1}</Label>
-                            </FormGroup>
 
-                            <FormGroup>
-                                <Input type="radio" id="var2" name="answer"
-                                    value={currentQuestion.var2}
-                                    checked={selectedOption === currentQuestion.var2}
-                                    onChange={handleOptionChange}
-                                />
-                                <Label for="var2">{currentQuestion.var2}</Label>
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Input type="radio" id="var3" name="answer"
-                                    value={currentQuestion.var3}
-                                    checked={selectedOption === currentQuestion.var3}
-                                    onChange={handleOptionChange}
-                                />
-                                <Label for="var3">{currentQuestion.var3}</Label>
-                            </FormGroup>
+                            <ul className="variants">
+                                {renderVariants()}
+                            </ul>
 
                             <div>
                                 <MyButton isWhite> Пояснення </MyButton>
-                                <MyButton onClick={handleNextQuestion}> Наступне </MyButton>
+                                {
+                                    currentQuestionIndex < (questions.length - 1) &&
+                                    <MyButton onClick={handleNextQuestion}> Наступне </MyButton>
+                                }
                             </div>
-                        </Form>
+                        </form>
                     )}
                 </div>
                 <div className="childDiv">
@@ -174,7 +186,6 @@ const Questions = () => {
                     />
                 </div>
             </div>
-
         </div>
     );
 };
