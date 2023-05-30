@@ -1,6 +1,6 @@
 import { Container, Input, Label, Row } from "reactstrap";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import "./QuestionsChoice.css";
 import MyButton from "../UI/button/MyButton";
 
@@ -8,12 +8,19 @@ const QuestionsChoice = () => {
     const navigate = useNavigate();
     const [selectedComplexity, setSelectedComplexity] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
+    const [categoryOptions, setCategoryOptions] = useState([]);
 
     const handleComplexityChange = (e) => setSelectedComplexity(e.target.value);
     const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
 
-    const handleStartButtonClick = () => navigate("/next-page1");
+    const handleStartButtonClick = () => navigate("/questions");
     const handleExamButtonClick = () => navigate("/next-page2");
+
+    useEffect(() => {
+        fetch(`/categories`)
+            .then(response => response.json())
+            .then(data => setCategoryOptions(data));
+    }, []);
 
     const complexityOptions = [
         { value: "", label: "Будь-яка" },
@@ -26,6 +33,14 @@ const QuestionsChoice = () => {
         return complexityOptions.map(option => (
             <option key={option.value} value={option.value}>
                 {option.label}
+            </option>
+        ));
+    };
+
+    const renderCategoryOptions = () => {
+        return categoryOptions.map(option => (
+            <option key={option.id} value={option.id}>
+                {option.name}
             </option>
         ));
     };
@@ -56,10 +71,7 @@ const QuestionsChoice = () => {
                                 value={selectedCategory}
                                 onChange={handleCategoryChange}
                             >
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                {/* TODO: fetch categories from DB */}
+                                {renderCategoryOptions()}
                             </Input>
                         </div>
                     </div>
@@ -80,6 +92,7 @@ const QuestionsChoice = () => {
                             <label>Випадкові 20 питань за 20 хвилин</label>
                         </div>
                     </div>
+                    {/*TODO: add two buttons for authenticated User*/}
                 </Row>
             </div>
         </Container>
