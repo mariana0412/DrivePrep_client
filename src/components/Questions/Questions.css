@@ -74,7 +74,10 @@
     border: black 1px solid;
     padding: 7px;
     border-radius: 25px;
+    height: 400px;
+    overflow-y: scroll;
 }
+
 
 .theme-item {
     padding: 10px;

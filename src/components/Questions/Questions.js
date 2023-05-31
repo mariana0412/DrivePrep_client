@@ -17,14 +17,41 @@ const Questions = () => {
     const [selectedThemeId, setSelectedThemeId] = useState("all");
     const [isAnswerChecked, setIsAnswerChecked] = useState(false);
 
+    const searchParams = new URLSearchParams(window.location.search);
+    const complexity = searchParams.get("complexity");
+    const category = searchParams.get("category");
+
+    const [showEmpty, setShowEmpty] = useState(false);
+
     useEffect(() => {
-        /*TODO: fetch question according to chosen complexity if it was chosen*/
         let url = `/questions`;
-        if (selectedThemeId !== "all") url += `?themeId=${selectedThemeId}`;
+
+        if(selectedThemeId !== 'all')
+            url += `?themeId=${selectedThemeId}`;
+        else if(category)
+            url += `?categoryId=${category}`
+
+        if(complexity)
+            url += `&complexityLevel=${complexity}`;
+        // add if new questions
+
         fetch(url)
-            .then((response) => response.json())
-            .then((data) => setQuestions(data));
-    }, [selectedThemeId]);
+            .then((response) => {
+                if(response.status === 204)
+                    return null;
+                else
+                    return response.json();
+            })
+            .then((data) => {
+                if(data) {
+                    setQuestions(data);
+                    setShowEmpty(data.length === 0);
+                } else {
+                    setQuestions([]);
+                    setShowEmpty(true);
+                }
+            })
+    }, [category, complexity, selectedThemeId]);
 
     const handleQuestionClick = (index) => {
         setIsAnswerChecked(false);
@@ -43,6 +70,8 @@ const Questions = () => {
         setCurrentQuestionIndex(0);
         setCurrentPage(0);
         setAnswersCorrect({});
+        setIsAnswerChecked(false);
+        setSelectedOption("");
     };
 
     const checkAnswer = (item) => {
@@ -131,11 +160,7 @@ const Questions = () => {
             }`;
 
             return (
-                <li
-                    key={item}
-                    className={variantClass}
-                    onClick={() => checkAnswer(item)}
-                >
+                <li key={item} className={variantClass} onClick={() => checkAnswer(item)}>
                     {item}
                 </li>
             );
@@ -150,37 +175,44 @@ const Questions = () => {
             </div>
 
             <div className="parentDiv">
-                <div className="childDiv question">
-                    {currentQuestion && (
-                        <form className="question-container">
-                            <div className="question-content">
-                                <h3>{currentQuestion.text}</h3>
-                                {/*TODO: think about how to display images*/}
-                                {currentQuestion.picturePath && (
-                                    <img
-                                        src={currentQuestion.picturePath}
-                                        alt="Question Image"
-                                        className="question-image"
-                                    />
-                                )}
-                            </div>
+                {showEmpty ?
+                    <div className="text-center">
+                        <p>No results found.</p>
+                    </div>
+                    :
+                    <div className="childDiv question">
+                        {currentQuestion && (
+                            <form className="question-container">
+                                <div className="question-content">
+                                    <h3>{currentQuestion.text}</h3>
+                                    {/*TODO: think about how to display images*/}
+                                    {currentQuestion.picturePath && (
+                                        <img
+                                            src={currentQuestion.picturePath}
+                                            alt="Question Image"
+                                            className="question-image"
+                                        />
+                                    )}
+                                </div>
 
-                            <ul className="variants">
-                                {renderVariants()}
-                            </ul>
+                                <ul className="variants">
+                                    {renderVariants()}
+                                </ul>
 
-                            <div>
-                                <MyButton isWhite> Пояснення </MyButton>
-                                {
-                                    currentQuestionIndex < (questions.length - 1) &&
-                                    <MyButton onClick={handleNextQuestion}> Наступне </MyButton>
-                                }
-                            </div>
-                        </form>
-                    )}
-                </div>
+                                <div>
+                                    <MyButton isWhite> Пояснення </MyButton>
+                                    {
+                                        currentQuestionIndex < (questions.length - 1) &&
+                                        <MyButton onClick={handleNextQuestion}> Наступне </MyButton>
+                                    }
+                                </div>
+                            </form>
+                        )}
+                    </div>
+                }
                 <div className="childDiv">
                     <ThemesList
+                        categoryId={category}
                         selectedThemeId={selectedThemeId}
                         onThemeClick={handleThemeClick}
                     />

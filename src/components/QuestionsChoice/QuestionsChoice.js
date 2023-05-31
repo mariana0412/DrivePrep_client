@@ -7,13 +7,19 @@ import MyButton from "../UI/button/MyButton";
 const QuestionsChoice = () => {
     const navigate = useNavigate();
     const [selectedComplexity, setSelectedComplexity] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState(3); // category B
     const [categoryOptions, setCategoryOptions] = useState([]);
 
     const handleComplexityChange = (e) => setSelectedComplexity(e.target.value);
     const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
 
-    const handleStartButtonClick = () => navigate("/questions");
+    const handleStartButtonClick = () => {
+        // TODO: if user is authenticated, setSelectedCategory(hisCategory);
+        let url = `/questions?category=${selectedCategory}`;
+        if(selectedComplexity)
+            url += `&complexity=${selectedComplexity}`;
+        navigate(url);
+    }
     const handleExamButtonClick = () => navigate("/next-page2");
 
     useEffect(() => {
@@ -26,7 +32,8 @@ const QuestionsChoice = () => {
         { value: "", label: "Будь-яка" },
         { value: "1", label: "Легка" },
         { value: "2", label: "Середня" },
-        { value: "3", label: "Складна" }
+        { value: "3", label: "Складна" },
+        { value: "4", label: "Дуже складна" }
     ];
 
     const renderComplexityOptions = () => {
