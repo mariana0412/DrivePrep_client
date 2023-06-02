@@ -2,7 +2,7 @@
     position: fixed;
     top: 0;
     width: 100%;
-    background-color: #f8f9fa;
+    background-color: #F7EFEF;
 }
 
 .navbar-list {
@@ -16,7 +16,6 @@
 }
 
 .navbar-item {
-    /*padding: 14px 16px;*/
     text-align: center;
 }
 
