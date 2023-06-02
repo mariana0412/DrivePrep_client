@@ -46,19 +46,19 @@ const AppNavbar = () => {
                     </Link>
                 </li>
                 {/*TODO: when auth implemented, write logic of changing login icon to profile button and logout icon */}
-                <li className="navbar-item navbar-item-right">
+                {/*<li className="navbar-item navbar-item-right">
                     <Link className="navbar-link" to="/profile">
                         <MyButton style={{ margin: '5px' }}>Профіль</MyButton>
                     </Link>
                     <Link className="navbar-link" to="/">
                         <img src={logout} className="logoutImg" alt="logout"/>
                     </Link>
-                </li>
-                {/*<li className="navbar-item navbar-item-right">
-                    <Link className="navbar-link" to="/login">
+    </li>*/}
+                <li className="navbar-item navbar-item-right">
+                    <Link className="navbar-link" to="/authorization">
                         <img src={login} className="loginImg" alt="login"/>
                     </Link>
-                </li>*/}
+                </li>
             </ul>
         </nav>
     )
