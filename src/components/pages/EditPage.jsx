@@ -4,6 +4,7 @@ import PasswordEdit from "../EditProfileInfo/PasswordEdit";
 import classes from './EditPage.module.css'
 import MyButton from "../UI/button/MyButton";
 import CategoriesService from "../API/EditService";
+import AppNavbar from "../AppNavbar/AppNavbar";
 
 const EditPage = (id) => {
     const [categories, setCategories] = useState([]);
@@ -25,12 +26,15 @@ const EditPage = (id) => {
     }, []);
 
     return (
-        <div className={classes.myEditPage}>
-            <div className={classes.myEditPageColumn}>
-                <ProfileEdit categories={categories} user={user}/>
-                <PasswordEdit user={user}/>
+        <div>
+            <AppNavbar/>
+            <div className={classes.myEditPage}>
+                <div className={classes.myEditPageColumn}>
+                    <ProfileEdit categories={categories} user={user}/>
+                    <PasswordEdit user={user}/>
+                </div>
+                <MyButton>Переглянути прогрес за темами</MyButton>
             </div>
-            <MyButton>Переглянути прогрес за темами</MyButton>
         </div>
     );
 };
