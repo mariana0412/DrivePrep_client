@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MyButton from "../UI/button/MyButton";
 import { Label, Input } from "reactstrap";
 
-const SignUp = () => {
+const SignUpForm = () => {
   const [surname, setSurname] = useState("");
   const [name, setName] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(2); // category B
@@ -120,7 +120,7 @@ const SignUp = () => {
             id="surname"
             value={surname}
             onChange={handleSurnameChange}
-            style={{ width: "300px", borderRadius: "15px" }} // Adjust the width here
+            style={{ width: "300px", borderRadius: "15px" }}
           ></Input>
         </div>
 
@@ -134,7 +134,7 @@ const SignUp = () => {
             id="name"
             value={name}
             onChange={handleNameChange}
-            style={{ width: "300px", borderRadius: "15px" }} // Adjust the width here
+            style={{ width: "300px", borderRadius: "15px" }}
           ></Input>
         </div>
 
@@ -148,7 +148,7 @@ const SignUp = () => {
             id="selectCategory"
             value={selectedCategory}
             onChange={handleCategoryChange}
-            style={{ width: "307.2px", height:"45.2px", border: "2px solid black", borderRadius: "15px" }} // Adjust the width here
+            style={{ width: "307.2px", height:"45.2px", border: "2px solid black", borderRadius: "15px" }}
           >
             {renderCategoryOptions()}
           </Input>
@@ -164,7 +164,7 @@ const SignUp = () => {
             id="email"
             value={email}
             onChange={handleEmailChange}
-            style={{ width: "300px", borderRadius: "15px" }} // Adjust the width here
+            style={{ width: "300px", borderRadius: "15px" }}
           ></Input>
         </div>
 
@@ -179,7 +179,7 @@ const SignUp = () => {
             id="password"
             value={password}
             onChange={handlePasswordChange}
-            style={{ width: "300px", borderRadius: "15px" }} // Adjust the width here
+            style={{ width: "300px", borderRadius: "15px" }}
           ></Input>
         </div>
 
@@ -197,7 +197,7 @@ const SignUp = () => {
             id="repeatPassword"
             value={repeatPassword}
             onChange={handleRepeatPasswordChange}
-            style={{ width: "300px", borderRadius: "15px" }} // Adjust the width here
+            style={{ width: "300px", borderRadius: "15px" }}
           ></Input>
         </div>
       </div>
@@ -217,4 +217,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignUpForm;

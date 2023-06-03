@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from "./components/Home";
 import QuestionsChoice from "./components/QuestionsChoice/QuestionsChoice";
 import Questions from "./components/Questions/Questions";
-import AuthorizationPage from './components/AuthorizationPage/AuthorizationPage';
+import AuthorizationPage from './components/Authorization/AuthorizationPage';
 const App = () => {
     return (
         <Router>

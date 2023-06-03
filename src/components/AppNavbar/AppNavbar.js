@@ -5,7 +5,7 @@ import homeIcon from '../../images/homeIcon.svg';
 import login from '../../images/login.svg';
 import logout from '../../images/logout.svg';
 import MyButton from "../UI/button/MyButton";
-import Logout from "../AuthorizationPage/Logout";
+import Logout from "../Authorization/Logout";
 
 const AppNavbar = () => {
     const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem('token'));

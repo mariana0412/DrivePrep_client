@@ -1,6 +1,6 @@
-import SignIn from "../SignInForm/SingIn";
+import SignIn from "./SingInForm";
 import AppNavbar from "../AppNavbar/AppNavbar";
-import SignUp from "../SignUpForm/SignUp";
+import SignUpForm from "./SignUpForm";
 
 const AuthorizationPage = () => {
     return (
@@ -11,7 +11,7 @@ const AuthorizationPage = () => {
                 <SignIn/>
             </div>
             <div style={{ flex: '70%', paddingLeft: '10px', margin: "30px"}}>
-                <SignUp/>
+                <SignUpForm/>
             </div>
             </div>
         </div>
