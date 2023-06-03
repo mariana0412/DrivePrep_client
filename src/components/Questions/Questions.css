@@ -77,7 +77,7 @@
     border: black 1px solid;
     padding: 7px;
     border-radius: 25px;
-    height: 500px;
+    height: 420px;
     overflow-y: scroll;
     background-color: #F7EFEF;
     text-align: center;
@@ -139,4 +139,12 @@
 
 .variant.answer-label.incorrect {
     background-color: #A42E43;
+}
+
+.content {
+    font-size: 36px;
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    transform: translate(-50%, -50%);
 }

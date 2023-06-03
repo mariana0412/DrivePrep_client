@@ -193,7 +193,7 @@ const Questions = () => {
             <div className="parentDiv">
                 {showEmpty ?
                     <div className="text-center">
-                        <p>No results found.</p>
+                        <div className="content">Таких питань нема.</div>
                     </div>
                     :
                     <div className="childDiv question">
