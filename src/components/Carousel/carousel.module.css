@@ -1,0 +1,40 @@
+.carousel {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    overflow: hidden;
+    margin: 190px auto;
+
+}
+
+.carousel-items {
+    display: flex;
+    width: 100%;
+    transition: transform 0.3s ease-in-out;
+    gap: 20px;
+}
+
+.carousel-item {
+    flex: 0 0 calc(90% / 4);
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 30px;
+    border: #A42E43 solid 1px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.arrow {
+    border: none;
+    background-color: transparent;
+    color: #A42E43;;
+    font-size: 75px;
+    cursor: pointer;
+}
+
+.arrow.left {
+    margin-right: 10px;
+}
+
+.arrow.right {
+    margin-left: 90px;
+}
