@@ -1,0 +1,14 @@
+.container {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.inputContainer{
+    display: grid;
+    grid-template: auto auto / 1fr 1fr;
+    grid-gap: 30px;
+
+}
