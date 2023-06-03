@@ -3,6 +3,7 @@ import classes from './Region.module.css'
 import MyButton from "../UI/button/MyButton";
 import MyInput from "../UI/input/MyInput";
 import Map from "../../images/carNumberMap.svg"
+import AppNavbar from "../AppNavbar/AppNavbar";
 
 
 const regionData = {
@@ -72,26 +73,29 @@ function RegionCodeApp() {
     };
 
     return (
-        <div className={classes.container}>
-            <div className={classes.column}>
-                <img className={classes.logo} src={Map} alt="Region" />
-                <p>Визначте до якого регіону належить автомобіль, за його номерним знаком</p>
-            </div>
-            <div className={classes.column}>
+        <div>
+            <AppNavbar/>
+            <div className={classes.container}>
+                <div className={classes.column}>
+                    <img className={classes.logo} src={Map} alt="Region" />
+                    <p>Визначте до якого регіону належить автомобіль, за його номерним знаком</p>
+                </div>
+                <div className={classes.column}>
 
-                <form className={classes.inForm} onSubmit={handleFormSubmit}>
+                    <form className={classes.inForm} onSubmit={handleFormSubmit}>
 
-                    <label>
-                        Введіть код регіону:
-                    </label>
-                    <MyInput type="text" value={code} onChange={handleCodeChange} />
+                        <label>
+                            Введіть код регіону:
+                        </label>
+                        <MyInput type="text" value={code} onChange={handleCodeChange} />
 
-                    <MyButton type="submit">Перевірити</MyButton>
-                </form>
+                        <MyButton type="submit">Перевірити</MyButton>
+                    </form>
 
-                <div >
-                    <label>Відповідь: </label>
-                    <span>{region}</span> </div>
+                    <div >
+                        <label>Відповідь: </label>
+                        <span>{region}</span> </div>
+                </div>
             </div>
         </div>
     );
