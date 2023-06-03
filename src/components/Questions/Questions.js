@@ -29,17 +29,7 @@ const Questions = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [explanation, setExplanation] = useState("");
 
-    // Function to open the modal and set the explanation
-    const openModal = (explanation) => {
-        setIsModalOpen(true);
-        setExplanation(explanation);
-    };
-
-    // Function to close the modal
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setExplanation("");
-    };
+    const [isNewQuestionsChecked, setIsNewQuestionsChecked] = useState(false);
 
     useEffect(() => {
         let url = `/questions`;
@@ -51,7 +41,11 @@ const Questions = () => {
 
         if(complexity)
             url += `&complexityLevel=${complexity}`;
-        // add if new questions
+
+        if(isNewQuestionsChecked) {
+            const formattedDate = '2023-01-01';
+            url += `&dateAdded=${formattedDate}`;
+        }
 
         const userId = localStorage.getItem("userId");
         if(userId)
@@ -59,21 +53,21 @@ const Questions = () => {
 
         fetch(url)
             .then((response) => {
-                if(response.status === 204)
-                    return null;
+                if (response.status === 204)
+                    return [];
                 else
                     return response.json();
             })
             .then((data) => {
-                if(data) {
-                    setQuestions(data);
-                    setShowEmpty(data.length === 0);
-                } else {
-                    setQuestions([]);
-                    setShowEmpty(true);
-                }
+                setQuestions(data);
+                setShowEmpty(data.length === 0);
             })
-    }, [category, complexity, selectedThemeId]);
+            .catch((error) => {
+                console.error('Error:', error);
+                setQuestions([]);
+                setShowEmpty(true);
+            });
+    }, [category, complexity, isNewQuestionsChecked, selectedThemeId]);
 
     const handleQuestionClick = (index) => {
         setIsAnswerChecked(false);
@@ -175,6 +169,20 @@ const Questions = () => {
         }
     }, [currentPage, questions.length]);
 
+    const openModal = (explanation) => {
+        setIsModalOpen(true);
+        setExplanation(explanation);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setExplanation("");
+    };
+
+    const handleNewQuestionsChange = () => {
+        setIsNewQuestionsChecked(!isNewQuestionsChecked);
+    };
+
     return (
         <div>
             <AppNavbar />
@@ -223,6 +231,15 @@ const Questions = () => {
                     </div>
                 }
                 <div className="childDiv themes">
+                    <div className="checkbox-container">
+                        <input
+                            type="checkbox"
+                            checked={isNewQuestionsChecked}
+                            onChange={handleNewQuestionsChange}
+                        />
+                        <label htmlFor="newQuestions">Нові питання 2023 року</label>
+                    </div>
+                    <br></br>
                     <ThemesList
                         categoryId={category}
                         selectedThemeId={selectedThemeId}
