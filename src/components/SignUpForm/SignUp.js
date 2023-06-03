@@ -54,7 +54,7 @@ const SignUp = () => {
     })
         .then((response) => {
           if (response.ok) {
-            alert(`Welcome to DrivePrep ${name}! Now you can login.`);
+            alert(`${name}, ласкаво просимо до DrivePrep! Тепер Ви можете ввійти у Ваш профіль.`);
             clearInputFields();
           } else {
             throw new Error(response.status);
@@ -62,7 +62,7 @@ const SignUp = () => {
         })
         .catch((error) => {
           if (error.message === "400") {
-            alert("You are already registered. Please, just login.");
+            alert("Ця електронна пошта вже використовується. Будь ласка, увійдіть у Ваш аккаунт.");
           } else {
             console.error(error);
           }
@@ -73,7 +73,7 @@ const SignUp = () => {
 
   const passwordLengthIsValid = () => {
     if (password.length < 8) {
-      alert("Password should be at least 8 characters long");
+      alert("Пароль має мати більш ніж 8 символів!");
       return false;
     }
     return true;
@@ -81,7 +81,7 @@ const SignUp = () => {
 
   const repeatPasswordIsEqualToPassword = () => {
     if (password !== repeatPassword) {
-      alert("Passwords do not match");
+      alert("Паролі не збігаються!");
       return false;
     }
     return true;
@@ -90,7 +90,7 @@ const SignUp = () => {
   const emailIsValid = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      alert("Please enter a valid email address");
+      alert("Будь-ласка, введіть коректну електронну адресу.");
       return false;
     }
     return true;
