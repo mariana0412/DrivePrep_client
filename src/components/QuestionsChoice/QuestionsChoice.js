@@ -5,21 +5,36 @@ import "./QuestionsChoice.css";
 import MyButton from "../UI/button/MyButton";
 
 const QuestionsChoice = () => {
-    const navigate = useNavigate();
     const [selectedComplexity, setSelectedComplexity] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState(3); // category B
+    const [selectedCategory, setSelectedCategory] = useState(2); // category B
     const [categoryOptions, setCategoryOptions] = useState([]);
 
     const handleComplexityChange = (e) => setSelectedComplexity(e.target.value);
     const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
 
+    const navigate = useNavigate();
+
     const handleStartButtonClick = () => {
-        // TODO: if user is authenticated, setSelectedCategory(hisCategory);
-        let url = `/questions?category=${selectedCategory}`;
+        const urlToRedirect = determineTrainingUrl();
+        navigate(urlToRedirect);
+    }
+
+    const determineTrainingUrl = () => {
+        let url = `/questions?category=`;
+
+        const categoryId = determineCategoryId();
+        url += `${categoryId}`;
+
         if(selectedComplexity)
             url += `&complexity=${selectedComplexity}`;
-        navigate(url);
+        return url;
     }
+
+    const determineCategoryId = () => {
+        const userCategoryId = localStorage.getItem("userCategoryId");
+        return userCategoryId ? userCategoryId : selectedCategory;
+    }
+
     const handleExamButtonClick = () => navigate("/next-page2");
 
     useEffect(() => {
@@ -69,18 +84,20 @@ const QuestionsChoice = () => {
                                 {renderComplexityOptions()}
                             </Input>
                         </div>
-                        <div className="inputDiv">
-                            <Label for="selectCategory">Категорія: </Label>
-                            <Input
-                                className="largeInput"
-                                type="select"
-                                id="selectCategory"
-                                value={selectedCategory}
-                                onChange={handleCategoryChange}
-                            >
-                                {renderCategoryOptions()}
-                            </Input>
-                        </div>
+                        {!localStorage.getItem("token") &&
+                            <div className="inputDiv">
+                                <Label for="selectCategory">Категорія: </Label>
+                                <Input
+                                    className="largeInput"
+                                    type="select"
+                                    id="selectCategory"
+                                    value={selectedCategory}
+                                    onChange={handleCategoryChange}
+                                >
+                                    {renderCategoryOptions()}
+                                </Input>
+                            </div>
+                        }
                     </div>
 
                     <div className="parentDiv">
