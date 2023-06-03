@@ -6,6 +6,7 @@ import ThemesList from "./ThemesList";
 import Pagination from "./Pagination";
 import Variants from "./Variants";
 import ExplanationModal from "./ExplanationModal";
+import {FaSave} from "react-icons/fa";
 
 const Questions = () => {
     const [questions, setQuestions] = useState([]);
@@ -30,6 +31,7 @@ const Questions = () => {
     const [explanation, setExplanation] = useState("");
 
     const [isNewQuestionsChecked, setIsNewQuestionsChecked] = useState(false);
+    const [isSaved, setIsSaved] = useState(!!currentQuestion?.saved);
 
     useEffect(() => {
         let url = `/questions`;
@@ -73,12 +75,14 @@ const Questions = () => {
         setIsAnswerChecked(false);
         setSelectedOption("");
         setCurrentQuestionIndex(currentPage * questionsPerPage + index);
+        setIsSaved(!!questions[currentPage * questionsPerPage + index]?.saved)
     };
 
-    const handleNextQuestion = () => {
+    const handleNextQuestionClick = () => {
         if (currentQuestionIndex < questions.length - 1)
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         setIsAnswerChecked(false);
+        setIsSaved(!!questions[currentQuestionIndex + 1]?.saved);
     };
 
     const handleThemeClick = (themeId) => {
@@ -183,6 +187,44 @@ const Questions = () => {
         setIsNewQuestionsChecked(!isNewQuestionsChecked);
     };
 
+    const handleSaveQuestion = () => {
+        const userId = localStorage.getItem("userId");
+        const questionId = currentQuestion.id;
+
+        if(!isSaved) {
+            const savedQuestion = {
+                "id": {
+                    "questionId": questionId,
+                    "userId": userId
+                }
+            };
+
+            fetch('http://localhost:8080/saved-questions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(savedQuestion),
+            })
+                .then(response => response.text())
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        } else {
+            fetch(`http://localhost:8080/saved-questions/${questionId}/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => response.text())
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+        setIsSaved(!isSaved);
+    }
+
     return (
         <div>
             <AppNavbar />
@@ -197,6 +239,12 @@ const Questions = () => {
                     </div>
                     :
                     <div className="childDiv question">
+                        {localStorage.getItem("token") &&
+                            <button className={`save-button ${isSaved ? 'saved' : ''}`}
+                                    onClick={handleSaveQuestion}>
+                                <FaSave/>
+                            </button>
+                        }
                         {currentQuestion && (
                             <form className="question-container">
                                 <div className="question-content">
@@ -223,7 +271,7 @@ const Questions = () => {
                                     <MyButton isWhite onClick={() => openModal(currentQuestion.tips)}> Пояснення </MyButton>
                                     {
                                         currentQuestionIndex < (questions.length - 1) &&
-                                        <MyButton onClick={handleNextQuestion}> Наступне </MyButton>
+                                        <MyButton onClick={handleNextQuestionClick}> Наступне </MyButton>
                                     }
                                 </div>
                             </form>
