@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import "./Questions.css";
 import AppNavbar from "../AppNavbar/AppNavbar";
 import MyButton from "../UI/button/MyButton";
 import ThemesList from "./ThemesList";
+import Pagination from "./Pagination";
+import Variants from "./Variants";
+import ExplanationModal from "./ExplanationModal";
 
 const Questions = () => {
     const [questions, setQuestions] = useState([]);
@@ -23,6 +26,21 @@ const Questions = () => {
 
     const [showEmpty, setShowEmpty] = useState(false);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [explanation, setExplanation] = useState("");
+
+    // Function to open the modal and set the explanation
+    const openModal = (explanation) => {
+        setIsModalOpen(true);
+        setExplanation(explanation);
+    };
+
+    // Function to close the modal
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setExplanation("");
+    };
+
     useEffect(() => {
         let url = `/questions`;
 
@@ -34,6 +52,10 @@ const Questions = () => {
         if(complexity)
             url += `&complexityLevel=${complexity}`;
         // add if new questions
+
+        const userId = localStorage.getItem("userId");
+        if(userId)
+            url += `&userId=${userId}`;
 
         fetch(url)
             .then((response) => {
@@ -84,46 +106,52 @@ const Questions = () => {
         });
         setIsAnswerChecked(true);
         setSelectedOption(item);
+
+        const userId = localStorage.getItem("userId");
+
+        if (userId) {
+            const questionId = currentQuestion.id;
+
+            let solvedQuestion = {
+                "id": {
+                    "questionId": questionId,
+                    "userId": userId
+                },
+                "correct": isCorrect
+            };
+
+            fetch('http://localhost:8080/solved-questions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(solvedQuestion),
+            })
+                .then(response => response.text())
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
     };
 
-    const renderQuestions = () => {
+    const renderPagination = () => {
         const startIndex = currentPage * questionsPerPage;
         const endIndex = startIndex + questionsPerPage;
         const pageQuestions = questions.slice(startIndex, endIndex);
 
         return (
-            <>
-                {showPrevArrow && (
-                    <button className="arrow prev-arrow" onClick={goToPreviousPage}>
-                        <i className="fas fa-chevron-left"></i>
-                    </button>
-                )}
-                {pageQuestions.map((question, index) => (
-                    <div
-                        key={question.id}
-                        className={`question-number 
-                        ${
-                            startIndex + index === currentQuestionIndex
-                                ? "active"
-                                : ""
-                        }
-                        ${answersCorrect[startIndex + index] ? "correct" : ""}
-                        ${
-                            answersCorrect[startIndex + index] === false
-                                ? "incorrect"
-                                : ""
-                        }`}
-                        onClick={() => handleQuestionClick(index)}
-                    >
-                        {startIndex + index + 1}
-                    </div>
-                ))}
-                {showNextArrow && (
-                    <button className="arrow next-arrow" onClick={goToNextPage}>
-                        <i className="fas fa-chevron-right"></i>
-                    </button>
-                )}
-            </>
+            <Pagination
+                currentPage={currentPage}
+                questionsPerPage={questionsPerPage}
+                currentQuestionIndex={currentQuestionIndex}
+                handleQuestionClick={handleQuestionClick}
+                showPrevArrow={showPrevArrow}
+                showNextArrow={showNextArrow}
+                goToPreviousPage={goToPreviousPage}
+                goToNextPage={goToNextPage}
+                questions={pageQuestions}
+                answersCorrect={answersCorrect}
+            />
         );
     };
 
@@ -147,31 +175,11 @@ const Questions = () => {
         }
     }, [currentPage, questions.length]);
 
-    const variants = () =>  [currentQuestion.var1, currentQuestion.var2, currentQuestion.var3];
-
-    const renderVariants = () => {
-        return variants().map((item) => {
-            const variantClass = `variant answer-label ${
-                selectedOption === item && answersCorrect[currentQuestionIndex]
-                    ? 'correct'
-                    : selectedOption === item && answersCorrect[currentQuestionIndex] === false
-                        ? 'incorrect'
-                        : ''
-            }`;
-
-            return (
-                <li key={item} className={variantClass} onClick={() => checkAnswer(item)}>
-                    {item}
-                </li>
-            );
-        });
-    };
-
     return (
         <div>
             <AppNavbar />
             <div className="question-numbers">
-                {renderQuestions()}
+                {renderPagination()}
             </div>
 
             <div className="parentDiv">
@@ -195,12 +203,16 @@ const Questions = () => {
                                     )}
                                 </div>
 
-                                <ul className="variants">
-                                    {renderVariants()}
-                                </ul>
+                                <Variants
+                                    currentQuestion={currentQuestion}
+                                    selectedOption={selectedOption}
+                                    answersCorrect={answersCorrect}
+                                    currentQuestionIndex={currentQuestionIndex}
+                                    checkAnswer={checkAnswer}
+                                />
 
                                 <div>
-                                    <MyButton isWhite> Пояснення </MyButton>
+                                    <MyButton isWhite onClick={() => openModal(currentQuestion.tips)}> Пояснення </MyButton>
                                     {
                                         currentQuestionIndex < (questions.length - 1) &&
                                         <MyButton onClick={handleNextQuestion}> Наступне </MyButton>
@@ -210,7 +222,7 @@ const Questions = () => {
                         )}
                     </div>
                 }
-                <div className="childDiv">
+                <div className="childDiv themes">
                     <ThemesList
                         categoryId={category}
                         selectedThemeId={selectedThemeId}

@@ -67,15 +67,20 @@
     background-color: #999;
 }
 
+.themes {
+    width: 20%;
+}
+
 .themes-list {
     display: flex;
     flex-direction: column;
-    text-align: right;
     border: black 1px solid;
     padding: 7px;
     border-radius: 25px;
-    height: 400px;
+    height: 500px;
     overflow-y: scroll;
+    background-color: #F7EFEF;
+    text-align: center;
 }
 
 
