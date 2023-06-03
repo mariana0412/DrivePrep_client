@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import AppNavbar from "../AppNavbar/AppNavbar";
 import MyButton from "../UI/button/MyButton";
-import { Button, Form, FormGroup, Label, Input } from "reactstrap";
+import { Label, Input } from "reactstrap";
 
 const SignUp = () => {
   const [surname, setSurname] = useState("");
   const [name, setName] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(3); // category B
+  const [selectedCategory, setSelectedCategory] = useState(2); // category B
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,6 +32,79 @@ const SignUp = () => {
     ));
   };
 
+  const handleSignUp = () => {
+    if(!passwordIsValid() || !emailIsValid())
+      return;
+
+    const userData = {
+      surname: surname,
+      name: name,
+      patronymic: "", // Assuming the patronymic is not part of the form
+      categoryId: selectedCategory,
+      email: email,
+      password: password,
+    };
+
+    fetch("http://localhost:8080/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    })
+        .then((response) => {
+          if (response.ok) {
+            alert(`Welcome to DrivePrep ${name}! Now you can login.`);
+            clearInputFields();
+          } else {
+            throw new Error(response.status);
+          }
+        })
+        .catch((error) => {
+          if (error.message === "400") {
+            alert("You are already registered. Please, just login.");
+          } else {
+            console.error(error);
+          }
+        });
+  };
+
+  const passwordIsValid = () => passwordLengthIsValid() && repeatPasswordIsEqualToPassword();
+
+  const passwordLengthIsValid = () => {
+    if (password.length < 8) {
+      alert("Password should be at least 8 characters long");
+      return false;
+    }
+    return true;
+  }
+
+  const repeatPasswordIsEqualToPassword = () => {
+    if (password !== repeatPassword) {
+      alert("Passwords do not match");
+      return false;
+    }
+    return true;
+  }
+
+  const emailIsValid = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert("Please enter a valid email address");
+      return false;
+    }
+    return true;
+  }
+
+  const clearInputFields = () => {
+    setSurname("");
+    setName("");
+    setSelectedCategory(2);
+    setEmail("");
+    setPassword("");
+    setRepeatPassword("");
+  }
+
   return (
     <div>
       <div
@@ -51,6 +123,7 @@ const SignUp = () => {
             style={{ width: "300px", borderRadius: "15px" }} // Adjust the width here
           ></Input>
         </div>
+
         <div style={{ padding: "10px", margin: "10px" }}>
           <Label for="name" style={{ display: "block", padding: "10px" }}>
             Ім'я:{" "}
@@ -66,7 +139,7 @@ const SignUp = () => {
         </div>
 
         <div style={{ padding: "10px", margin: "10px" }}>
-          <Label for="selectCategory"style={{ display: "block", padding: "10px" }}>
+          <Label for="selectCategory" style={{ display: "block", padding: "10px" }}>
             Категорія: 
           </Label>
           <Input
@@ -80,13 +153,14 @@ const SignUp = () => {
             {renderCategoryOptions()}
           </Input>
         </div>
+
         <div style={{ padding: "10px", margin: "10px" }}>
           <Label for="email" style={{ display: "block", padding: "10px" }}>
             Електронна пошта:{" "}
           </Label>
           <Input
             className="largeInput"
-            type="text"
+            type="email"
             id="email"
             value={email}
             onChange={handleEmailChange}
@@ -101,13 +175,14 @@ const SignUp = () => {
           <Input
             size="300"
             className="largeInput"
-            type="text"
+            type="password"
             id="password"
             value={password}
             onChange={handlePasswordChange}
             style={{ width: "300px", borderRadius: "15px" }} // Adjust the width here
           ></Input>
         </div>
+
         <div style={{ padding: "10px", margin: "10px" }}>
           <Label
             for="repeatPassword"
@@ -118,7 +193,7 @@ const SignUp = () => {
           <Input
             size="300"
             className="largeInput"
-            type="text"
+            type="password"
             id="repeatPassword"
             value={repeatPassword}
             onChange={handleRepeatPasswordChange}
@@ -134,7 +209,7 @@ const SignUp = () => {
           margin: "10px",
         }}
       >
-        <MyButton size="sm" style={{ width: "300px" }}>
+        <MyButton size="sm" style={{ width: "300px" }} onClick={handleSignUp}>
           Зареєструватись
         </MyButton>
       </div>
