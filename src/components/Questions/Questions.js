@@ -230,6 +230,12 @@ const Questions = () => {
                     />
                 </div>
             </div>
+
+            <ExplanationModal
+                isOpen={isModalOpen}
+                closeModal={closeModal}
+                explanation={explanation}
+            />
         </div>
     );
 };
