@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import SignIn from "../SignInForm/SingIn";
 import AppNavbar from "../AppNavbar/AppNavbar";
 import SignUp from "../SignUpForm/SignUp";
@@ -12,7 +11,7 @@ const AuthorizationPage = () => {
                 <SignIn/>
             </div>
             <div style={{ flex: '70%', paddingLeft: '10px', margin: "30px"}}>
-            <SignUp/>
+                <SignUp/>
             </div>
             </div>
         </div>
