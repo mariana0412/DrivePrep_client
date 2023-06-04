@@ -8,12 +8,15 @@ import QuestionService from '../../services/QuestionService';
 import Variants from "./Variants";
 
 const Training = () => {
+
+    const QUESTIONS_PER_PAGE = 20;
+    const NEW_QUESTIONS_START_DATE = '2023-01-01';
+
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const currentQuestion = questions[currentQuestionIndex];
     const [selectedOption, setSelectedOption] = useState("");
     const [answersCorrect, setAnswersCorrect] = useState({});
-    const questionsPerPage = 20;
     const [currentPage, setCurrentPage] = useState(0);
     const [showPrevArrow, setShowPrevArrow] = useState(false);
     const [showNextArrow, setShowNextArrow] = useState(true);
@@ -21,6 +24,7 @@ const Training = () => {
     const [isAnswerChecked, setIsAnswerChecked] = useState(false);
 
     const searchParams = new URLSearchParams(window.location.search);
+    const mode = searchParams.get("mode");
     const complexity = searchParams.get("complexity");
     const category = searchParams.get("category");
 
@@ -32,25 +36,7 @@ const Training = () => {
     const [showHint, setShowHint] = useState(false);
 
     useEffect(() => {
-        let url = `/questions`;
-
-        if(selectedThemeId !== 'all')
-            url += `?themeId=${selectedThemeId}`;
-        else if(category)
-            url += `?categoryId=${category}`
-
-        if(complexity)
-            url += `&complexityLevel=${complexity}`;
-
-        if(isNewQuestionsChecked) {
-            const formattedDate = '2023-01-01';
-            url += `&dateAdded=${formattedDate}`;
-        }
-
-        const userId = localStorage.getItem("userId");
-        if(userId)
-            url += `&userId=${userId}`;
-
+        const url = defineUrl();
         fetch(url)
             .then((response) => {
                 if (response.status === 204)
@@ -69,11 +55,38 @@ const Training = () => {
             });
     }, [category, complexity, isNewQuestionsChecked, selectedThemeId]);
 
+    const defineUrl = () => {
+        console.log('mode: ' + mode)
+        let url;
+        const userId = localStorage.getItem("userId");
+        if(mode === "mistakes")
+            return `wrong-questions?userId=${userId}`
+        else if(mode === "saved")
+            return `saved-questions?userId=${userId}`
+
+        url = `/questions`;
+
+        if(selectedThemeId !== 'all')
+            url += `?themeId=${selectedThemeId}`;
+        else if(category)
+            url += `?categoryId=${category}`
+
+        if(complexity)
+            url += `&complexityLevel=${complexity}`;
+
+        if(isNewQuestionsChecked)
+            url += `&dateAdded=${NEW_QUESTIONS_START_DATE}`;
+
+        if(userId)
+            url += `&userId=${userId}`;
+        return url;
+    }
+
     const handleQuestionClick = (index) => {
         setIsAnswerChecked(false);
         setSelectedOption("");
-        setCurrentQuestionIndex(currentPage * questionsPerPage + index);
-        setIsSaved(!!questions[currentPage * questionsPerPage + index]?.saved)
+        setCurrentQuestionIndex(currentPage * QUESTIONS_PER_PAGE + index);
+        setIsSaved(!!questions[currentPage * QUESTIONS_PER_PAGE + index]?.saved)
         setShowHint(false);
     };
 
@@ -101,7 +114,7 @@ const Training = () => {
         const isCorrect = item === currentQuestion.answer;
         setAnswersCorrect({
             ...answersCorrect,
-            [currentQuestionIndex]: isCorrect,
+            [currentQuestion.id]: isCorrect,
         });
         setIsAnswerChecked(true);
         setSelectedOption(item);
@@ -116,8 +129,8 @@ const Training = () => {
     };
 
     const renderPagination = () => {
-        const startIndex = currentPage * questionsPerPage;
-        const endIndex = startIndex + questionsPerPage;
+        const startIndex = currentPage * QUESTIONS_PER_PAGE;
+        const endIndex = startIndex + QUESTIONS_PER_PAGE;
         const pageQuestions = questions.slice(startIndex, endIndex);
 
         return (
@@ -130,16 +143,7 @@ const Training = () => {
                 {pageQuestions.map((question, index) => (
                     <div
                         key={question.id}
-                        className={`question-number 
-                        ${startIndex + index === currentQuestionIndex ? "active" : ""}
-                        ${answersCorrect[startIndex + index] ? "correct" : ""}
-                        ${answersCorrect[startIndex + index] === false ? "incorrect" : ""}
-                        
-                        ${localStorage.getItem('token')
-                        && question.solved === true ? "correct" :
-                            question.solved === false ? "incorrect" : ""}
-                        `}
-
+                        className={defineClassName(question, index, startIndex)}
                         onClick={() => handleQuestionClick(index)}
                     >
                         {startIndex + index + 1}
@@ -154,23 +158,40 @@ const Training = () => {
         );
     };
 
+    const defineClassName = (question, index, startIndex) => {
+        if(answersCorrect[question.id])
+            return `question-number correct`;
+        else if(answersCorrect[question.id] === false)
+            return `question-number incorrect`;
+
+        if(localStorage.getItem('token') && question.solved)
+            return `question-number correct`;
+        else if(localStorage.getItem('token') && question.solved === false)
+            return `question-number incorrect`;
+
+        if(startIndex + index === currentQuestionIndex)
+            return `question-number active`;
+        
+        return `question-number`;
+    }
+
     const goToPreviousPage = () => {
         if (currentPage > 0)
             setCurrentPage(currentPage - 1);
     };
 
     const goToNextPage = () => {
-        if (currentPage < Math.ceil(questions.length / questionsPerPage) - 1)
+        if (currentPage < Math.ceil(questions.length / QUESTIONS_PER_PAGE) - 1)
             setCurrentPage(currentPage + 1);
     };
 
     useEffect(() => {
-        if (questions.length <= questionsPerPage) {
+        if (questions.length <= QUESTIONS_PER_PAGE) {
             setShowPrevArrow(false);
             setShowNextArrow(false);
         } else {
             setShowPrevArrow(currentPage > 0);
-            setShowNextArrow(currentPage < Math.ceil(questions.length / questionsPerPage) - 1);
+            setShowNextArrow(currentPage < Math.ceil(questions.length / QUESTIONS_PER_PAGE) - 1);
         }
     }, [currentPage, questions.length]);
 
@@ -209,7 +230,7 @@ const Training = () => {
                     <div className="childDiv question">
                         { localStorage.getItem("token")
                             &&
-                            <button className={`save-button ${isSaved ? 'saved' : ''}`} onClick={handleSaveQuestion}>
+                            <button className={`save-button ${!!currentQuestion?.saved ? 'saved' : ''}`} onClick={handleSaveQuestion}>
                                 <FaSave/>
                             </button>
                         }
@@ -264,22 +285,27 @@ const Training = () => {
                         )}
                     </div>
                 }
-                <div className="childDiv themes">
-                    <div className="checkbox-container">
-                        <input
-                            type="checkbox"
-                            checked={isNewQuestionsChecked}
-                            onChange={handleNewQuestionsChange}
+
+                {
+                    !mode
+                    &&
+                    <div className="childDiv themes">
+                        <div className="checkbox-container">
+                            <input
+                                type="checkbox"
+                                checked={isNewQuestionsChecked}
+                                onChange={handleNewQuestionsChange}
+                            />
+                            <label htmlFor="newQuestions">Нові питання 2023 року</label>
+                        </div>
+                        <br></br>
+                        <ThemesList
+                            categoryId={category}
+                            selectedThemeId={selectedThemeId}
+                            onThemeClick={handleThemeClick}
                         />
-                        <label htmlFor="newQuestions">Нові питання 2023 року</label>
                     </div>
-                    <br></br>
-                    <ThemesList
-                        categoryId={category}
-                        selectedThemeId={selectedThemeId}
-                        onThemeClick={handleThemeClick}
-                    />
-                </div>
+                }
             </div>
         </div>
     );

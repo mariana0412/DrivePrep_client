@@ -1,13 +1,13 @@
 import '../App.css';
 import AppNavbar from './AppNavbar/AppNavbar';
-import QuestionsChoice from "./QuestionsChoice/QuestionsChoice";
+import ModeSelection from "./ModeSelection/ModeSelection";
 
 const Home = () => {
 
     return (
         <div>
             <AppNavbar/>
-            <QuestionsChoice/>
+            <ModeSelection/>
         </div>
     );
 };

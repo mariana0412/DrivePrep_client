@@ -1,10 +1,10 @@
 import { Container, Input, Label } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import {useEffect, useState} from "react";
-import "./QuestionsChoice.css";
+import "./ModeSelection.css";
 import MyButton from "../UI/button/MyButton";
 
-const QuestionsChoice = () => {
+const ModeSelection = () => {
     const [selectedComplexity, setSelectedComplexity] = useState("");
     const [selectedCategory, setSelectedCategory] = useState(2); // category B
     const [categoryOptions, setCategoryOptions] = useState([]);
@@ -24,6 +24,16 @@ const QuestionsChoice = () => {
         let url = `/exam`;
         let urlToRedirect = determineUrlParams(url);
         navigate(urlToRedirect);
+    }
+
+    const handleMistakesButtonClick = () => {
+        const url = `training?mode=mistakes`;
+        navigate(url);
+    }
+
+    const handleSavedButtonClick = () => {
+        const url = `training?mode=saved`;
+        navigate(url);
     }
 
     const determineUrlParams = (baseUrl) => {
@@ -124,12 +134,14 @@ const QuestionsChoice = () => {
                     &&
                     <div className="parentDiv">
                         <div className="childDiv">
-                            <MyButton style={{ width: '220px', 'margin-top': '75px', 'margin-left': '-100px'}}>
+                            <MyButton style={{ width: '220px', 'margin-top': '75px', 'margin-left': '-100px'}}
+                                      onClick={handleMistakesButtonClick}>
                                 Робота над помилками
                             </MyButton>
                         </div>
                         <div className="childDiv">
-                            <MyButton style={{ width: '220px', 'margin-top': '75px', 'margin-left': '100px'}}>
+                            <MyButton style={{ width: '220px', 'margin-top': '75px', 'margin-left': '100px'}}
+                                      onClick={handleSavedButtonClick}>
                                 Збережені питання
                             </MyButton>
                         </div>
@@ -140,4 +152,4 @@ const QuestionsChoice = () => {
     );
 };
 
-export default QuestionsChoice;
+export default ModeSelection;

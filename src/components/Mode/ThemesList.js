@@ -51,5 +51,4 @@ const ThemesList = ({ categoryId, selectedThemeId, onThemeClick }) => {
     );
 };
 
-
 export default ThemesList;
