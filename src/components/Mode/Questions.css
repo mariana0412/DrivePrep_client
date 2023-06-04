@@ -102,8 +102,16 @@
     justify-content: space-between;
 }
 
-.question-second-column {
-    width: 50%;
+.question-first-column {
+    width: 54%;
+}
+
+.question-first-column.no-image {
+    width: 100%;
+}
+
+.question-image-container {
+    height: 280px;
 }
 
 .question-hint {
@@ -122,13 +130,14 @@
     margin: 1rem;
     justify-content: space-between;
 }
+
 .childDiv {
     padding: 1rem;
 }
 
 .question {
     text-align: left;
-    width: 75%;
+    width: 90%;
 }
 
 .variants {
@@ -181,4 +190,14 @@
 
 .save-button.saved {
     background-color: yellow;
+}
+
+.timer {
+    background-color: rgba(128, 0, 0, 0.5);
+    color: black;
+    width: 200px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+    border-radius: 5px;
+    border: 3px solid black;
 }

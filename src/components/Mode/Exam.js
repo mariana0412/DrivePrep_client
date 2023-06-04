@@ -6,12 +6,14 @@ import QuestionService from "../../services/QuestionService";
 import Variants from "./Variants";
 
 const Exam = () => {
+    const EXAM_TIME = 60 * 20;   // 20 minutes in seconds
+
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const currentQuestion = questions[currentQuestionIndex];
     const [selectedOption, setSelectedOption] = useState("");
     const [answersCorrect, setAnswersCorrect] = useState({});
-    const [timer, setTimer] = useState(60 * 20); // 20 minutes in seconds
+    const [timer, setTimer] = useState(EXAM_TIME);
     const [showModal, setShowModal] = useState(false);
 
     const searchParams = new URLSearchParams(window.location.search);
@@ -25,6 +27,8 @@ const Exam = () => {
 
     const [finishExamText, setFinishExamText] = useState("");
     const [showHint, setShowHint] = useState(false);
+
+    const [score, setScore] = useState(0);
 
     useEffect(() => {
         let url = `/exam-questions`;
@@ -62,6 +66,7 @@ const Exam = () => {
             setIsTimerFinished(true);
             setIsFinished(true);
             setFinishExamText("Час вичерпався.")
+            calculateScore();
             setShowModal(true);
         }
     }, [timer, isTimerFinished]);
@@ -140,8 +145,17 @@ const Exam = () => {
     const handleFinishButtonClick = () => {
         setIsFinished(true);
         setIsTimerRunning(false);
+        calculateScore();
         setShowModal(true);
     }
+
+    const calculateScore = () => {
+        let correctAnswers = 0;
+        for (let questionId in answersCorrect)
+            if (answersCorrect[questionId])
+                correctAnswers++;
+        setScore(correctAnswers);
+    };
 
     return (
         <div>
@@ -155,48 +169,11 @@ const Exam = () => {
                     {currentQuestion && (
                         <form className="question-container">
                             <div>
-                                <h3>{currentQuestion.text}</h3>
-                                {/* TODO: display images properly */}
-                                {/*{currentQuestion.picturePath && (
-                                        <img
-                                            src={process.env.PUBLIC_URL + `/question/` + currentQuestion.picturePath}
-                                            alt="Question Image"
-                                            className="question-image"
-                                        />
-                                    )}*/}
+                                <div style={{height: '50px'}}>
+                                    <h3>{currentQuestion.text}</h3>
+                                </div>
                                 <div className="question-content">
-                                    <div className="question-first-column">
-                                        <img
-                                            src={process.env.PUBLIC_URL + `/question/2/1159_.jpg`}
-                                            alt="Question Illustration"
-                                            className="question-image"
-                                        />
-
-                                        <div>
-                                            {
-                                                !isFinished
-                                                    ?
-                                                    <MyButton
-                                                        onClick={handleFinishButtonClick}>
-                                                        Завершити
-                                                    </MyButton>
-                                                    :
-                                                    <MyButton isWhite
-                                                              onClick={() => setShowHint(true)}>
-                                                        Пояснення
-                                                    </MyButton>
-                                            }
-                                            {
-                                                currentQuestionIndex < questions.length - 1
-                                                &&
-                                                <MyButton isWhite onClick={handleNextQuestionClick}>
-                                                    Наступне
-                                                </MyButton>
-                                            }
-                                        </div>
-                                    </div>
-
-                                    <div className="question-second-column">
+                                    <div className={`question-first-column ${!currentQuestion.picturePath ? 'no-image' : ''}`}>
                                         <Variants
                                             currentQuestion={currentQuestion}
                                             selectedOption={selectedOption}
@@ -206,11 +183,49 @@ const Exam = () => {
                                             examFinished={isFinished}
                                             selectedAnswers={selectedAnswers}
                                         />
+                                    </div>
 
+                                        <div className="question-second-column">
+                                            <div className="question-image-container">
+                                                { currentQuestion.picturePath &&
+                                                    <img
+                                                        src={process.env.PUBLIC_URL + `/question/2/1159_.jpg`}
+                                                        alt="Question Illustration"
+                                                        className="question-image"
+                                                    />
+                                                }
+                                            </div>
+                                        </div>
+                                </div>
+
+                                <div className="question-content">
+                                    <div className='question-first-column'>
                                         {
                                             showHint
                                             &&
                                             <div className="question-hint"> {currentQuestion.tips} </div>
+                                        }
+                                    </div>
+                                    <div className='question-second-column'>
+                                        {
+                                            !isFinished
+                                                ?
+                                                <MyButton
+                                                    onClick={handleFinishButtonClick}>
+                                                    Завершити
+                                                </MyButton>
+                                                :
+                                                <MyButton isWhite
+                                                          onClick={() => setShowHint(true)}>
+                                                    Пояснення
+                                                </MyButton>
+                                        }
+                                        {
+                                            currentQuestionIndex < questions.length - 1
+                                            &&
+                                            <MyButton isWhite onClick={handleNextQuestionClick}>
+                                                Наступне
+                                            </MyButton>
                                         }
                                     </div>
                                 </div>
@@ -218,15 +233,19 @@ const Exam = () => {
                         </form>
                     )}
                 </div>
-                <div className="childDiv timer">
-                    <h2>Залишилося: {formatTimer(timer)} </h2>
+                <div className="childDiv">
+                    <div className="timer">
+                        <h1>{formatTimer(timer)}</h1>
+                    </div>
                     {
                         showModal
                         &&
                         <div className="modal">
                             <div className="modal-content">
-                                <h2>Кінець!</h2>
+                                <h2>Кінець! {score}/20</h2>
                                 <p>{finishExamText}</p>
+                                {score >= 18 ? `Вітаємо! Ви склали іспит!` :
+                                    `На жаль, Ви  не склали іспит...`}
                             </div>
                         </div>
                     }

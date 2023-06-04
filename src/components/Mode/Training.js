@@ -237,33 +237,11 @@ const Training = () => {
                         {currentQuestion && (
                             <form className="question-container">
                                 <div>
-                                    <h3>{currentQuestion.text}</h3>
-                                    {/* TODO: display images properly */}
-                                    {/*{currentQuestion.picturePath && (
-                                        <img
-                                            src={process.env.PUBLIC_URL + `/question/` + currentQuestion.picturePath}
-                                            alt="Question Image"
-                                            className="question-image"
-                                        />
-                                    )}*/}
+                                    <div style={{height: '50px'}}>
+                                        <h3>{currentQuestion.text}</h3>
+                                    </div>
                                     <div className="question-content">
-                                        <div className="question-first-column">
-                                            <img
-                                                src={process.env.PUBLIC_URL + `/question/2/1159_.jpg`}
-                                                alt="Question Illustration"
-                                                className="question-image"
-                                            />
-
-                                            <div>
-                                                <MyButton isWhite onClick={() => setShowHint(true)}> Пояснення </MyButton>
-                                                {
-                                                    currentQuestionIndex < (questions.length - 1) &&
-                                                    <MyButton onClick={handleNextQuestionClick}> Наступне </MyButton>
-                                                }
-                                            </div>
-                                        </div>
-
-                                        <div className="question-second-column">
+                                        <div className={`question-first-column ${!currentQuestion.picturePath ? 'no-image' : ''}`}>
                                             <Variants
                                                 currentQuestion={currentQuestion}
                                                 selectedOption={selectedOption}
@@ -272,11 +250,35 @@ const Training = () => {
                                                 checkAnswer={checkAnswer}
                                                 examMode={false}
                                             />
+                                        </div>
 
+                                        <div className="question-second-column">
+                                            <div className="question-image-container">
+                                                { currentQuestion.picturePath &&
+                                                    <img
+                                                        src={process.env.PUBLIC_URL + `/question/2/1159_.jpg`}
+                                                        alt="Question Illustration"
+                                                        className="question-image"
+                                                    />
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="question-content">
+                                        <div className='question-first-column'>
                                             {
                                                 showHint
                                                 &&
                                                 <div className="question-hint"> {currentQuestion.tips} </div>
+                                            }
+                                        </div>
+
+                                        <div className='question-second-column'>
+                                            <MyButton isWhite onClick={() => setShowHint(true)}> Пояснення </MyButton>
+                                            {
+                                                currentQuestionIndex < (questions.length - 1) &&
+                                                <MyButton onClick={handleNextQuestionClick}> Наступне </MyButton>
                                             }
                                         </div>
                                     </div>
