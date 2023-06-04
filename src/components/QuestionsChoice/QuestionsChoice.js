@@ -1,4 +1,4 @@
-import { Container, Input, Label, Row } from "reactstrap";
+import { Container, Input, Label } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import {useEffect, useState} from "react";
 import "./QuestionsChoice.css";
@@ -73,54 +73,68 @@ const QuestionsChoice = () => {
     return (
         <Container className="my-page-container">
             <div className="centered-content">
-                <Row>
-                    <div >
+                <div >
+                    <div className="inputDiv">
+                        <Label for="select1">Складність: </Label>
+                        <Input
+                            className="largeInput"
+                            type="select"
+                            id="select1"
+                            value={selectedComplexity}
+                            onChange={handleComplexityChange}
+                        >
+                            {renderComplexityOptions()}
+                        </Input>
+                    </div>
+                    {!localStorage.getItem("token") &&
                         <div className="inputDiv">
-                            <Label for="select1">Складність: </Label>
+                            <Label for="selectCategory">Категорія: </Label>
                             <Input
                                 className="largeInput"
                                 type="select"
-                                id="select1"
-                                value={selectedComplexity}
-                                onChange={handleComplexityChange}
+                                id="selectCategory"
+                                value={selectedCategory}
+                                onChange={handleCategoryChange}
                             >
-                                {renderComplexityOptions()}
+                                {renderCategoryOptions()}
                             </Input>
                         </div>
-                        {!localStorage.getItem("token") &&
-                            <div className="inputDiv">
-                                <Label for="selectCategory">Категорія: </Label>
-                                <Input
-                                    className="largeInput"
-                                    type="select"
-                                    id="selectCategory"
-                                    value={selectedCategory}
-                                    onChange={handleCategoryChange}
-                                >
-                                    {renderCategoryOptions()}
-                                </Input>
-                            </div>
-                        }
-                    </div>
+                    }
+                </div>
 
+                <div className="parentDiv">
+                    <div className="childDiv">
+                        <MyButton isWhite onClick={handleStartButtonClick}>
+                            Почати
+                        </MyButton>
+                        <br/>
+                        <label>Оберіть тему та тренуйтеся</label>
+                    </div>
+                    <div className="childDiv">
+                        <MyButton onClick={handleExamButtonClick}>
+                            Іспит
+                        </MyButton>
+                        <br/>
+                        <label>Випадкові 20 питань за 20 хвилин</label>
+                    </div>
+                </div>
+
+                {
+                    localStorage.getItem('token')
+                    &&
                     <div className="parentDiv">
                         <div className="childDiv">
-                            <MyButton isWhite onClick={handleStartButtonClick}>
-                                Почати
+                            <MyButton style={{ width: '220px', 'margin-top': '75px', 'margin-left': '-100px'}}>
+                                Робота над помилками
                             </MyButton>
-                            <br/>
-                            <label>Оберіть тему та тренуйтеся</label>
                         </div>
                         <div className="childDiv">
-                            <MyButton onClick={handleExamButtonClick}>
-                                Іспит
+                            <MyButton style={{ width: '220px', 'margin-top': '75px', 'margin-left': '100px'}}>
+                                Збережені питання
                             </MyButton>
-                            <br/>
-                            <label>Випадкові 20 питань за 20 хвилин</label>
                         </div>
                     </div>
-                    {/*TODO: add two buttons for authenticated User*/}
-                </Row>
+                }
             </div>
         </Container>
     );
