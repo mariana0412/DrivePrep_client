@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import "./Questions.css";
 import AppNavbar from "../AppNavbar/AppNavbar";
 import MyButton from "../UI/button/MyButton";
-import HintModal from "./HintModal";
 import QuestionService from "../../services/QuestionService";
 import Variants from "./Variants";
 
@@ -25,10 +24,7 @@ const Exam = () => {
     const [isTimerRunning, setIsTimerRunning] = useState(true);
 
     const [finishExamText, setFinishExamText] = useState("");
-
-    const [isHintModalOpen, setIsHintModalOpen] = useState(false);
-    const [hint, setHint] = useState("");
-
+    const [showHint, setShowHint] = useState(false);
 
     useEffect(() => {
         let url = `/exam-questions`;
@@ -73,16 +69,16 @@ const Exam = () => {
     const handleQuestionClick = (index) => {
         setSelectedOption("");
         setCurrentQuestionIndex(index);
+        setShowHint(false);
     };
 
     const handleNextQuestionClick = () => {
-        if (currentQuestionIndex < questions.length - 1) {
+        if (currentQuestionIndex < questions.length - 1)
             setCurrentQuestionIndex(currentQuestionIndex + 1);
-        }
 
-        if (timer <= 0) {
+        if (timer <= 0)
             setShowModal(true);
-        }
+        setShowHint(false);
     };
 
     const checkAnswer = (item) => {
@@ -146,15 +142,6 @@ const Exam = () => {
         setIsTimerRunning(false);
         setShowModal(true);
     }
-    const openModal = (explanation) => {
-        setIsHintModalOpen(true);
-        setHint(explanation);
-    };
-
-    const closeModal = () => {
-        setIsHintModalOpen(false);
-        setHint("");
-    };
 
     return (
         <div>
@@ -167,49 +154,66 @@ const Exam = () => {
                 <div className="childDiv question">
                     {currentQuestion && (
                         <form className="question-container">
-                            <div className="question-content">
-                                <h3>{currentQuestion.text}</h3>
-                                {/*TODO: think about how to display images*/}
-                                {currentQuestion.picturePath && (
-                                    <img
-                                        src={currentQuestion.picturePath}
-                                        alt="Question Image"
-                                        className="question-image"
-                                    />
-                                )}
-                            </div>
-
-                            <Variants
-                                currentQuestion={currentQuestion}
-                                selectedOption={selectedOption}
-                                currentQuestionIndex={currentQuestionIndex}
-                                checkAnswer={checkAnswer}
-                                examMode={true}
-                                examFinished={isFinished}
-                                selectedAnswers={selectedAnswers}
-                            />
-
                             <div>
-                                {
-                                    !isFinished
-                                        ?
-                                    <MyButton
-                                        onClick={handleFinishButtonClick}>
-                                        Завершити
-                                    </MyButton>
-                                        :
-                                    <MyButton isWhite
-                                              onClick={() => openModal(currentQuestion.tips)}>
-                                        Пояснення
-                                    </MyButton>
-                                }
-                                {
-                                    currentQuestionIndex < questions.length - 1
-                                    &&
-                                    <MyButton isWhite onClick={handleNextQuestionClick}>
-                                        Наступне
-                                    </MyButton>
-                                }
+                                <h3>{currentQuestion.text}</h3>
+                                {/* TODO: display images properly */}
+                                {/*{currentQuestion.picturePath && (
+                                        <img
+                                            src={process.env.PUBLIC_URL + `/question/` + currentQuestion.picturePath}
+                                            alt="Question Image"
+                                            className="question-image"
+                                        />
+                                    )}*/}
+                                <div className="question-content">
+                                    <div className="question-first-column">
+                                        <img
+                                            src={process.env.PUBLIC_URL + `/question/2/1159_.jpg`}
+                                            alt="Question Illustration"
+                                            className="question-image"
+                                        />
+
+                                        <div>
+                                            {
+                                                !isFinished
+                                                    ?
+                                                    <MyButton
+                                                        onClick={handleFinishButtonClick}>
+                                                        Завершити
+                                                    </MyButton>
+                                                    :
+                                                    <MyButton isWhite
+                                                              onClick={() => setShowHint(true)}>
+                                                        Пояснення
+                                                    </MyButton>
+                                            }
+                                            {
+                                                currentQuestionIndex < questions.length - 1
+                                                &&
+                                                <MyButton isWhite onClick={handleNextQuestionClick}>
+                                                    Наступне
+                                                </MyButton>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div className="question-second-column">
+                                        <Variants
+                                            currentQuestion={currentQuestion}
+                                            selectedOption={selectedOption}
+                                            currentQuestionIndex={currentQuestionIndex}
+                                            checkAnswer={checkAnswer}
+                                            examMode={true}
+                                            examFinished={isFinished}
+                                            selectedAnswers={selectedAnswers}
+                                        />
+
+                                        {
+                                            showHint
+                                            &&
+                                            <div className="question-hint"> {currentQuestion.tips} </div>
+                                        }
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     )}
@@ -228,11 +232,6 @@ const Exam = () => {
                     }
                 </div>
             </div>
-            <HintModal
-                isOpen={isHintModalOpen}
-                closeModal={closeModal}
-                hint={hint}
-            />
         </div>
     );
 };

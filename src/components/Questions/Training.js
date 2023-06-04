@@ -3,7 +3,6 @@ import "./Questions.css";
 import AppNavbar from "../AppNavbar/AppNavbar";
 import MyButton from "../UI/button/MyButton";
 import ThemesList from "./ThemesList";
-import HintModal from "./HintModal";
 import {FaSave} from "react-icons/fa";
 import QuestionService from '../../services/QuestionService';
 import Variants from "./Variants";
@@ -27,11 +26,10 @@ const Training = () => {
 
     const [showEmpty, setShowEmpty] = useState(false);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [hint, setHint] = useState("");
-
     const [isNewQuestionsChecked, setIsNewQuestionsChecked] = useState(false);
     const [isSaved, setIsSaved] = useState(!!currentQuestion?.saved);
+
+    const [showHint, setShowHint] = useState(false);
 
     useEffect(() => {
         let url = `/questions`;
@@ -76,6 +74,7 @@ const Training = () => {
         setSelectedOption("");
         setCurrentQuestionIndex(currentPage * questionsPerPage + index);
         setIsSaved(!!questions[currentPage * questionsPerPage + index]?.saved)
+        setShowHint(false);
     };
 
     const handleNextQuestionClick = () => {
@@ -83,6 +82,7 @@ const Training = () => {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         setIsAnswerChecked(false);
         setIsSaved(!!questions[currentQuestionIndex + 1]?.saved);
+        setShowHint(false);
     };
 
     const handleThemeClick = (themeId) => {
@@ -92,6 +92,7 @@ const Training = () => {
         setAnswersCorrect({});
         setIsAnswerChecked(false);
         setSelectedOption("");
+        setShowHint(false);
     };
 
     const checkAnswer = (item) => {
@@ -173,16 +174,6 @@ const Training = () => {
         }
     }, [currentPage, questions.length]);
 
-    const openModal = (explanation) => {
-        setIsModalOpen(true);
-        setHint(explanation);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setHint("");
-    };
-
     const handleNewQuestionsChange = () => setIsNewQuestionsChecked(!isNewQuestionsChecked);
 
     const handleSaveQuestion = async () => {
@@ -224,33 +215,50 @@ const Training = () => {
                         }
                         {currentQuestion && (
                             <form className="question-container">
-                                <div className="question-content">
+                                <div>
                                     <h3>{currentQuestion.text}</h3>
-                                    {/*TODO: think about how to display images*/}
-                                    {currentQuestion.picturePath && (
+                                    {/* TODO: display images properly */}
+                                    {/*{currentQuestion.picturePath && (
                                         <img
-                                            src={currentQuestion.picturePath}
+                                            src={process.env.PUBLIC_URL + `/question/` + currentQuestion.picturePath}
                                             alt="Question Image"
                                             className="question-image"
                                         />
-                                    )}
-                                </div>
+                                    )}*/}
+                                    <div className="question-content">
+                                        <div className="question-first-column">
+                                            <img
+                                                src={process.env.PUBLIC_URL + `/question/2/1159_.jpg`}
+                                                alt="Question Illustration"
+                                                className="question-image"
+                                            />
 
-                                <Variants
-                                    currentQuestion={currentQuestion}
-                                    selectedOption={selectedOption}
-                                    answersCorrect={answersCorrect}
-                                    currentQuestionIndex={currentQuestionIndex}
-                                    checkAnswer={checkAnswer}
-                                    examMode={false}
-                                />
+                                            <div>
+                                                <MyButton isWhite onClick={() => setShowHint(true)}> Пояснення </MyButton>
+                                                {
+                                                    currentQuestionIndex < (questions.length - 1) &&
+                                                    <MyButton onClick={handleNextQuestionClick}> Наступне </MyButton>
+                                                }
+                                            </div>
+                                        </div>
 
-                                <div>
-                                    <MyButton isWhite onClick={() => openModal(currentQuestion.tips)}> Пояснення </MyButton>
-                                    {
-                                        currentQuestionIndex < (questions.length - 1) &&
-                                        <MyButton onClick={handleNextQuestionClick}> Наступне </MyButton>
-                                    }
+                                        <div className="question-second-column">
+                                            <Variants
+                                                currentQuestion={currentQuestion}
+                                                selectedOption={selectedOption}
+                                                answersCorrect={answersCorrect}
+                                                currentQuestionIndex={currentQuestionIndex}
+                                                checkAnswer={checkAnswer}
+                                                examMode={false}
+                                            />
+
+                                            {
+                                                showHint
+                                                &&
+                                                <div className="question-hint"> {currentQuestion.tips} </div>
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
                         )}
@@ -273,12 +281,6 @@ const Training = () => {
                     />
                 </div>
             </div>
-
-            <HintModal
-                isOpen={isModalOpen}
-                closeModal={closeModal}
-                hint={hint}
-            />
         </div>
     );
 };

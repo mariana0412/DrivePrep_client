@@ -96,6 +96,27 @@
     background-color: #ccc;
 }
 
+.question-content {
+    display: flex;
+    margin: 1rem;
+    justify-content: space-between;
+}
+
+.question-second-column {
+    width: 50%;
+}
+
+.question-hint {
+    background-color: lightgray;
+    padding: 10px;
+    margin-top: 50px;
+    border-radius: 10px;
+    font-size: 15px;
+    text-align: justify;
+    border: 2px solid black;
+    font-style: italic;
+}
+
 .parentDiv {
     display: flex;
     margin: 1rem;
