@@ -15,8 +15,14 @@ const QuestionsChoice = () => {
     const navigate = useNavigate();
 
     const handleStartButtonClick = () => {
-        let url = `/questions`;
+        let url = `/training`;
         const urlToRedirect = determineUrlParams(url);
+        navigate(urlToRedirect);
+    }
+
+    const handleExamButtonClick = () => {
+        let url = `/exam`;
+        let urlToRedirect = determineUrlParams(url);
         navigate(urlToRedirect);
     }
 
@@ -32,12 +38,6 @@ const QuestionsChoice = () => {
     const determineCategoryId = () => {
         const userCategoryId = localStorage.getItem("userCategoryId");
         return userCategoryId ? userCategoryId : selectedCategory;
-    }
-
-    const handleExamButtonClick = () => {
-        let url = `/exam`;
-        let urlToRedirect = determineUrlParams(url);
-        navigate(urlToRedirect);
     }
 
     useEffect(() => {

@@ -18,7 +18,7 @@ const modalStyles = {
     },
 };
 
-const ExplanationModal = ({ isOpen, closeModal, explanation }) => {
+const HintModal = ({ isOpen, closeModal, hint }) => {
     return (
         <Modal
             isOpen={isOpen}
@@ -27,7 +27,7 @@ const ExplanationModal = ({ isOpen, closeModal, explanation }) => {
             style={modalStyles}
         >
             <ModalBody>
-                <p>{explanation}</p>
+                <p>{hint}</p>
             </ModalBody>
 
             <ModalFooter>
@@ -37,4 +37,4 @@ const ExplanationModal = ({ isOpen, closeModal, explanation }) => {
     );
 };
 
-export default ExplanationModal;
+export default HintModal;

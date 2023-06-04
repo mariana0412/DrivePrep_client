@@ -29,8 +29,8 @@
     background-color: #A42E43;
 }
 
-.answer-label.correct, .answer-label.incorrect {
-    color: white;
+.question-number.unanswered {
+    background-color: lightgray;
 }
 
 .question-numbers {
@@ -139,6 +139,10 @@
 
 .variant.answer-label.incorrect {
     background-color: #A42E43;
+}
+
+.variant.answer-label.chosen {
+    background-color: grey;
 }
 
 .content {

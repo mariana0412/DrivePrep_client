@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 
-const Variants = ({ currentQuestion, selectedOption, answersCorrect, currentQuestionIndex, checkAnswer }) => {
+const Variants = ({ currentQuestion, selectedOption, answersCorrect, currentQuestionIndex, checkAnswer,
+                          examMode, examFinished, selectedAnswers }) => {
     const [shuffledVariants, setShuffledVariants] = useState([]);
 
     useEffect(() => {
@@ -19,18 +20,31 @@ const Variants = ({ currentQuestion, selectedOption, answersCorrect, currentQues
             [shuffledVariants[i], shuffledVariants[j]] = [shuffledVariants[j], shuffledVariants[i]];
         }
         return shuffledVariants;
-    };
+    }
+
+    const variantClassName = (item) => {
+        let variantClass = `variant answer-label `;
+        let userAnswer = selectedOption;
+        if(examMode)
+            userAnswer = selectedAnswers[currentQuestionIndex];
+
+        if(userAnswer === item) {
+            if(!examMode || examFinished)
+                variantClass += (item === currentQuestion.answer) ? "correct" : "incorrect";
+            else if(examMode && !examFinished)
+                variantClass += `chosen`;
+        }
+
+        if (examMode && examFinished && item === currentQuestion.answer && item !== userAnswer)
+            variantClass += "correct";
+
+        return variantClass;
+    }
 
     return (
         <ul className="variants">
             {shuffledVariants.map((item) => {
-                const variantClass = `variant answer-label ${
-                    selectedOption === item && answersCorrect[currentQuestionIndex]
-                        ? "correct"
-                        : selectedOption === item && answersCorrect[currentQuestionIndex] === false
-                            ? "incorrect"
-                            : ""
-                }`;
+                const variantClass = variantClassName(item);
 
                 return (
                     <li key={item} className={variantClass} onClick={() => checkAnswer(item)}>

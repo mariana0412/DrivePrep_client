@@ -1,19 +1,18 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./Questions.css";
 import AppNavbar from "../AppNavbar/AppNavbar";
 import MyButton from "../UI/button/MyButton";
 import ThemesList from "./ThemesList";
-import Variants from "./Variants";
-import ExplanationModal from "./ExplanationModal";
+import HintModal from "./HintModal";
 import {FaSave} from "react-icons/fa";
 import QuestionService from '../../services/QuestionService';
+import Variants from "./Variants";
 
-const Questions = () => {
+const Training = () => {
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const currentQuestion = questions[currentQuestionIndex];
     const [selectedOption, setSelectedOption] = useState("");
-    const [answersCorrect, setAnswersCorrect] = useState({});
     const questionsPerPage = 20;
     const [currentPage, setCurrentPage] = useState(0);
     const [showPrevArrow, setShowPrevArrow] = useState(false);
@@ -28,7 +27,7 @@ const Questions = () => {
     const [showEmpty, setShowEmpty] = useState(false);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [explanation, setExplanation] = useState("");
+    const [hint, setHint] = useState("");
 
     const [isNewQuestionsChecked, setIsNewQuestionsChecked] = useState(false);
     const [isSaved, setIsSaved] = useState(!!currentQuestion?.saved);
@@ -89,7 +88,6 @@ const Questions = () => {
         setSelectedThemeId(themeId);
         setCurrentQuestionIndex(0);
         setCurrentPage(0);
-        setAnswersCorrect({});
         setIsAnswerChecked(false);
         setSelectedOption("");
     };
@@ -98,10 +96,6 @@ const Questions = () => {
         if(isAnswerChecked)
             return;
         const isCorrect = item === currentQuestion.answer;
-        setAnswersCorrect({
-            ...answersCorrect,
-            [currentQuestionIndex]: isCorrect,
-        });
         setIsAnswerChecked(true);
         setSelectedOption(item);
 
@@ -131,8 +125,8 @@ const Questions = () => {
                         key={question.id}
                         className={`question-number 
                         ${startIndex + index === currentQuestionIndex ? "active" : ""}
-                        ${answersCorrect[startIndex + index] ? "correct" : ""}
-                        ${answersCorrect[startIndex + index] === false ? "incorrect" : ""}
+                        ${selectedOption === currentQuestion.answer ? "correct" : ""}
+                        ${!(selectedOption === currentQuestion.answer) ? "incorrect" : ""}
                         
                         ${localStorage.getItem('token')
                         && question.solved === true ? "correct" :
@@ -175,12 +169,12 @@ const Questions = () => {
 
     const openModal = (explanation) => {
         setIsModalOpen(true);
-        setExplanation(explanation);
+        setHint(explanation);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setExplanation("");
+        setHint("");
     };
 
     const handleNewQuestionsChange = () => setIsNewQuestionsChecked(!isNewQuestionsChecked);
@@ -239,9 +233,9 @@ const Questions = () => {
                                 <Variants
                                     currentQuestion={currentQuestion}
                                     selectedOption={selectedOption}
-                                    answersCorrect={answersCorrect}
                                     currentQuestionIndex={currentQuestionIndex}
                                     checkAnswer={checkAnswer}
+                                    examMode={false}
                                 />
 
                                 <div>
@@ -273,13 +267,13 @@ const Questions = () => {
                 </div>
             </div>
 
-            <ExplanationModal
+            <HintModal
                 isOpen={isModalOpen}
                 closeModal={closeModal}
-                explanation={explanation}
+                hint={hint}
             />
         </div>
     );
 };
 
-export default Questions;
+export default Training;
