@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-const Variants = ({ currentQuestion, selectedOption, answersCorrect, currentQuestionIndex, checkAnswer,
+const Variants = ({ currentQuestion, selectedOption, currentQuestionIndex, checkAnswer,
                           examMode, examFinished, selectedAnswers }) => {
     const [shuffledVariants, setShuffledVariants] = useState([]);
 

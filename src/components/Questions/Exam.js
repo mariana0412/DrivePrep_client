@@ -11,7 +11,6 @@ const Exam = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const currentQuestion = questions[currentQuestionIndex];
     const [selectedOption, setSelectedOption] = useState("");
-    const [answersCorrect, setAnswersCorrect] = useState({});
     const [timer, setTimer] = useState(10); // 20 minutes in seconds
     const [showModal, setShowModal] = useState(false);
 
@@ -91,10 +90,6 @@ const Exam = () => {
         if(timer <= 0)
             return;
         const isCorrect = item === currentQuestion.answer;
-        setAnswersCorrect({
-            ...answersCorrect,
-            [currentQuestionIndex]: isCorrect,
-        });
         setSelectedOption(item);
 
         setSelectedAnswers({
@@ -118,9 +113,9 @@ const Exam = () => {
                         key={question.id}
                         className={`question-number 
                         ${index === currentQuestionIndex ? "active" : ""}
-                        ${isFinished && answersCorrect[index] ? "correct" : ""}
-                        ${isFinished && answersCorrect[index] === false ? "incorrect" : ""}
-                        ${isFinished && answersCorrect[index] === undefined ? "unanswered" : ""}
+                        ${isFinished && question.answer === selectedAnswers[index] ? "correct" : ""}
+                        ${isFinished && !(question.answer === selectedAnswers[index]) ? "incorrect" : ""}
+                        ${isFinished && question.answer === selectedAnswers[index] === undefined ? "unanswered" : ""}
                 `}
                         onClick={() => handleQuestionClick(index)}
                     >
@@ -182,7 +177,6 @@ const Exam = () => {
                             <Variants
                                 currentQuestion={currentQuestion}
                                 selectedOption={selectedOption}
-                                answersCorrect={answersCorrect}
                                 currentQuestionIndex={currentQuestionIndex}
                                 checkAnswer={checkAnswer}
                                 examMode={true}
