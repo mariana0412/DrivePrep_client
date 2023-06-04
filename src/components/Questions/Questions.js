@@ -3,10 +3,10 @@ import "./Questions.css";
 import AppNavbar from "../AppNavbar/AppNavbar";
 import MyButton from "../UI/button/MyButton";
 import ThemesList from "./ThemesList";
-import Pagination from "./Pagination";
 import Variants from "./Variants";
 import ExplanationModal from "./ExplanationModal";
 import {FaSave} from "react-icons/fa";
+import QuestionService from '../../services/QuestionService';
 
 const Questions = () => {
     const [questions, setQuestions] = useState([]);
@@ -14,7 +14,7 @@ const Questions = () => {
     const currentQuestion = questions[currentQuestionIndex];
     const [selectedOption, setSelectedOption] = useState("");
     const [answersCorrect, setAnswersCorrect] = useState({});
-    const questionsPerPage = 21;
+    const questionsPerPage = 20;
     const [currentPage, setCurrentPage] = useState(0);
     const [showPrevArrow, setShowPrevArrow] = useState(false);
     const [showNextArrow, setShowNextArrow] = useState(true);
@@ -109,26 +109,8 @@ const Questions = () => {
 
         if (userId) {
             const questionId = currentQuestion.id;
-
-            let solvedQuestion = {
-                "id": {
-                    "questionId": questionId,
-                    "userId": userId
-                },
-                "correct": isCorrect
-            };
-
-            fetch('http://localhost:8080/solved-questions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(solvedQuestion),
-            })
-                .then(response => response.text())
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+            QuestionService.saveSolvedQuestion(userId, questionId, isCorrect)
+                .catch((error) => console.error('Error:', error));
         }
     };
 
@@ -138,18 +120,36 @@ const Questions = () => {
         const pageQuestions = questions.slice(startIndex, endIndex);
 
         return (
-            <Pagination
-                currentPage={currentPage}
-                questionsPerPage={questionsPerPage}
-                currentQuestionIndex={currentQuestionIndex}
-                handleQuestionClick={handleQuestionClick}
-                showPrevArrow={showPrevArrow}
-                showNextArrow={showNextArrow}
-                goToPreviousPage={goToPreviousPage}
-                goToNextPage={goToNextPage}
-                questions={pageQuestions}
-                answersCorrect={answersCorrect}
-            />
+            <>
+                {showPrevArrow && (
+                    <button className="arrow prev-arrow" onClick={goToPreviousPage}>
+                        <i className="fas fa-chevron-left"></i>
+                    </button>
+                )}
+                {pageQuestions.map((question, index) => (
+                    <div
+                        key={question.id}
+                        className={`question-number 
+                        ${startIndex + index === currentQuestionIndex ? "active" : ""}
+                        ${answersCorrect[startIndex + index] ? "correct" : ""}
+                        ${answersCorrect[startIndex + index] === false ? "incorrect" : ""}
+                        
+                        ${localStorage.getItem('token')
+                        && question.solved === true ? "correct" :
+                            question.solved === false ? "incorrect" : ""}
+                        `}
+
+                        onClick={() => handleQuestionClick(index)}
+                    >
+                        {startIndex + index + 1}
+                    </div>
+                ))}
+                {showNextArrow && (
+                    <button className="arrow next-arrow" onClick={goToNextPage}>
+                        <i className="fas fa-chevron-right"></i>
+                    </button>
+                )}
+            </>
         );
     };
 
@@ -183,44 +183,20 @@ const Questions = () => {
         setExplanation("");
     };
 
-    const handleNewQuestionsChange = () => {
-        setIsNewQuestionsChecked(!isNewQuestionsChecked);
-    };
+    const handleNewQuestionsChange = () => setIsNewQuestionsChecked(!isNewQuestionsChecked);
 
-    const handleSaveQuestion = () => {
+    const handleSaveQuestion = async () => {
         const userId = localStorage.getItem("userId");
         const questionId = currentQuestion.id;
 
-        if(!isSaved) {
-            const savedQuestion = {
-                "id": {
-                    "questionId": questionId,
-                    "userId": userId
-                }
-            };
-
-            fetch('http://localhost:8080/saved-questions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(savedQuestion),
-            })
-                .then(response => response.text())
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-        } else {
-            fetch(`http://localhost:8080/saved-questions/${questionId}/${userId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-                .then(response => response.text())
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+        try {
+            if (!isSaved)
+                await QuestionService.saveSavedQuestion(userId, questionId);
+            else
+                await QuestionService.deleteSavedQuestion(userId, questionId);
+            setIsSaved(!isSaved);
+        } catch (error) {
+            console.error("Error:", error);
         }
         setIsSaved(!isSaved);
     }
@@ -233,15 +209,16 @@ const Questions = () => {
             </div>
 
             <div className="parentDiv">
-                {showEmpty ?
+                { showEmpty
+                    ?
                     <div className="text-center">
                         <div className="content">Таких питань нема.</div>
                     </div>
                     :
                     <div className="childDiv question">
-                        {localStorage.getItem("token") &&
-                            <button className={`save-button ${isSaved ? 'saved' : ''}`}
-                                    onClick={handleSaveQuestion}>
+                        { localStorage.getItem("token")
+                            &&
+                            <button className={`save-button ${isSaved ? 'saved' : ''}`} onClick={handleSaveQuestion}>
                                 <FaSave/>
                             </button>
                         }

@@ -15,19 +15,18 @@ const QuestionsChoice = () => {
     const navigate = useNavigate();
 
     const handleStartButtonClick = () => {
-        const urlToRedirect = determineTrainingUrl();
+        let url = `/questions`;
+        const urlToRedirect = determineUrlParams(url);
         navigate(urlToRedirect);
     }
 
-    const determineTrainingUrl = () => {
-        let url = `/questions?category=`;
-
+    const determineUrlParams = (baseUrl) => {
         const categoryId = determineCategoryId();
-        url += `${categoryId}`;
+        baseUrl += `?category=${categoryId}`;
 
         if(selectedComplexity)
-            url += `&complexity=${selectedComplexity}`;
-        return url;
+            baseUrl += `&complexity=${selectedComplexity}`;
+        return baseUrl;
     }
 
     const determineCategoryId = () => {
@@ -35,7 +34,11 @@ const QuestionsChoice = () => {
         return userCategoryId ? userCategoryId : selectedCategory;
     }
 
-    const handleExamButtonClick = () => navigate("/next-page2");
+    const handleExamButtonClick = () => {
+        let url = `/exam`;
+        let urlToRedirect = determineUrlParams(url);
+        navigate(urlToRedirect);
+    }
 
     useEffect(() => {
         fetch(`/categories`)
