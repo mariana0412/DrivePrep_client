@@ -13,6 +13,7 @@ const Training = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const currentQuestion = questions[currentQuestionIndex];
     const [selectedOption, setSelectedOption] = useState("");
+    const [answersCorrect, setAnswersCorrect] = useState({});
     const questionsPerPage = 20;
     const [currentPage, setCurrentPage] = useState(0);
     const [showPrevArrow, setShowPrevArrow] = useState(false);
@@ -88,6 +89,7 @@ const Training = () => {
         setSelectedThemeId(themeId);
         setCurrentQuestionIndex(0);
         setCurrentPage(0);
+        setAnswersCorrect({});
         setIsAnswerChecked(false);
         setSelectedOption("");
     };
@@ -96,6 +98,10 @@ const Training = () => {
         if(isAnswerChecked)
             return;
         const isCorrect = item === currentQuestion.answer;
+        setAnswersCorrect({
+            ...answersCorrect,
+            [currentQuestionIndex]: isCorrect,
+        });
         setIsAnswerChecked(true);
         setSelectedOption(item);
 
@@ -125,8 +131,8 @@ const Training = () => {
                         key={question.id}
                         className={`question-number 
                         ${startIndex + index === currentQuestionIndex ? "active" : ""}
-                        ${selectedOption === currentQuestion.answer ? "correct" : ""}
-                        ${!(selectedOption === currentQuestion.answer) ? "incorrect" : ""}
+                        ${answersCorrect[startIndex + index] ? "correct" : ""}
+                        ${answersCorrect[startIndex + index] === false ? "incorrect" : ""}
                         
                         ${localStorage.getItem('token')
                         && question.solved === true ? "correct" :
@@ -233,6 +239,7 @@ const Training = () => {
                                 <Variants
                                     currentQuestion={currentQuestion}
                                     selectedOption={selectedOption}
+                                    answersCorrect={answersCorrect}
                                     currentQuestionIndex={currentQuestionIndex}
                                     checkAnswer={checkAnswer}
                                     examMode={false}
