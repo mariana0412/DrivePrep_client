@@ -1,0 +1,15 @@
+.myEditPageColumn {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 90px;
+    margin-top: 150px;
+}
+
+
+.myEditPage{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}

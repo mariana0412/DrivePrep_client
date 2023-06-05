@@ -5,11 +5,14 @@ import ModeSelection from "./components/ModeSelection/ModeSelection";
 import Training from "./components/Mode/Training";
 import AuthorizationPage from './components/Authorization/AuthorizationPage';
 import Exam from "./components/Mode/Exam";
+import EditPage from "./components/pages/EditPage";
+
 const App = () => {
     return (
         <Router>
             <Routes>
                 <Route exact path="/" element={<Home/>}></Route>
+                <Route exact path="/profile" element={<EditPage id={"user1"}/>}></Route>
                 <Route exact path="/questions-choice" element={<ModeSelection/>}></Route>
                 <Route exact path="/training" element={<Training/>}></Route>
                 <Route exact path="/authorization" element={<AuthorizationPage/>}></Route>
