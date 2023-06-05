@@ -89,7 +89,8 @@ const SignUpForm = () => {
 
   const emailIsValid = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    const rusRegex = /.ru$/
+    if (!emailRegex.test(email) || rusRegex.test(email)) {
       alert("Будь-ласка, введіть коректну електронну адресу.");
       return false;
     }
@@ -140,7 +141,7 @@ const SignUpForm = () => {
 
         <div style={{ padding: "10px", margin: "10px" }}>
           <Label for="selectCategory" style={{ display: "block", padding: "10px" }}>
-            Категорія: 
+            Категорія:
           </Label>
           <Input
             className="largeInput"
