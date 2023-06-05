@@ -27,12 +27,12 @@ const ModeSelection = () => {
     }
 
     const handleMistakesButtonClick = () => {
-        const url = `training?mode=mistakes`;
+        const url = `../training?mode=mistakes`;
         navigate(url);
     }
 
     const handleSavedButtonClick = () => {
-        const url = `training?mode=saved`;
+        const url = `../training?mode=saved`;
         navigate(url);
     }
 
