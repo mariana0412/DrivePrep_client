@@ -3,8 +3,7 @@
     align-items: center;
     width: 90%;
     overflow: hidden;
-    margin: 190px auto;
-
+    margin: 120px auto 190px;
 }
 
 .carousel-items {
@@ -32,9 +31,9 @@
 }
 
 .arrow.left {
-    margin-right: 10px;
+    margin-right: 1%;
 }
 
 .arrow.right {
-    margin-left: 90px;
+    margin-left: 5.5%;
 }
