@@ -5,6 +5,7 @@ import MyButton from "../UI/button/MyButton";
 import QuestionService from "../../services/QuestionService";
 import Variants from "./Variants";
 import {FaSave} from "react-icons/fa";
+import {handleSaveQuestion} from "../../helpers/handleSaveQuestion";
 
 const Exam = () => {
     const EXAM_TIME = 60 * 20;   // 20 minutes in seconds
@@ -168,26 +169,7 @@ const Exam = () => {
         setScore(correctAnswers);
     };
 
-    const handleSaveQuestion = async () => {
-        const userId = localStorage.getItem("userId");
-        const questionId = currentQuestion.id;
-
-        try {
-            if (!isSaved)
-                await QuestionService.saveSavedQuestion(userId, questionId);
-            else
-                await QuestionService.deleteSavedQuestion(userId, questionId);
-            const updatedQuestions = questions.map((question) => {
-                if (question.id === questionId)
-                    question.saved = !isSaved;
-                return question;
-            });
-            setQuestions(updatedQuestions);
-            setIsSaved(!isSaved);
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    }
+    const handleSaveQuestionClick = () => handleSaveQuestion(isSaved, currentQuestion, questions, setQuestions, setIsSaved);
 
     return (
         <div>
@@ -200,7 +182,7 @@ const Exam = () => {
                 <div className="childDiv question">
                     { localStorage.getItem("token")
                         &&
-                        <button className={saveButtonClass} onClick={handleSaveQuestion}>
+                        <button className={saveButtonClass} onClick={handleSaveQuestionClick}>
                             <FaSave/>
                         </button>
                     }
