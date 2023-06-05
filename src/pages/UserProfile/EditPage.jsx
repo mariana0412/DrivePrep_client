@@ -3,15 +3,14 @@ import ProfileEdit from "./EditProfileInfo/ProfileEdit";
 import PasswordEdit from "./EditProfileInfo/PasswordEdit";
 import classes from './EditPage.module.css'
 import MyButton from "../../components/UI/button/MyButton";
-import CategoriesService from "../../services/EditService";
 import AppNavbar from "../../components/AppNavbar/AppNavbar";
 import {logout} from "../../utils/logout";
-import axios from "axios";
 import EditService from "../../services/EditService";
 
-const EditPage = (id) => {
+const EditPage = () => {
     const [categories, setCategories] = useState([]);
     const [user, setUser] = useState([]);
+    const id = localStorage.getItem('userId');
 
     useEffect(() => {
         const fetch = async () => {
