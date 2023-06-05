@@ -6,6 +6,8 @@ import QuestionService from "../../services/QuestionService";
 import Variants from "./Variants";
 import {FaSave} from "react-icons/fa";
 import {handleSaveQuestion} from "../../helpers/handleSaveQuestion";
+import {formatTimer} from "../../helpers/formatTimer";
+import {calculateExamScore} from "../../helpers/calculateExamScore";
 
 const Exam = () => {
     const EXAM_TIME = 60 * 20;   // 20 minutes in seconds
@@ -71,10 +73,10 @@ const Exam = () => {
             setIsTimerFinished(true);
             setIsFinished(true);
             setFinishExamText("Час вичерпався.")
-            calculateScore();
+            setScore(calculateExamScore(answersCorrect));
             setShowModal(true);
         }
-    }, [timer, isTimerFinished]);
+    }, [timer, isTimerFinished, answersCorrect]);
 
     useEffect(() => {
         setIsSaved(!!questions[currentQuestionIndex]?.saved);
@@ -144,30 +146,12 @@ const Exam = () => {
         );
     };
 
-
-    const formatTimer = (seconds) => {
-        if (seconds <= 0)
-            return "0:00";
-
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-    };
-
     const handleFinishButtonClick = () => {
         setIsFinished(true);
         setIsTimerRunning(false);
-        calculateScore();
+        setScore(calculateExamScore(answersCorrect));
         setShowModal(true);
     }
-
-    const calculateScore = () => {
-        let correctAnswers = 0;
-        for (let questionId in answersCorrect)
-            if (answersCorrect[questionId])
-                correctAnswers++;
-        setScore(correctAnswers);
-    };
 
     const handleSaveQuestionClick = () => handleSaveQuestion(isSaved, currentQuestion, questions, setQuestions, setIsSaved);
 
