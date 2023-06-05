@@ -1,5 +1,6 @@
 import React from 'react';
 import Carousel from '../Carousel/Carousel';
+import AppNavbar from "../AppNavbar/AppNavbar";
 
 const cards = [
     { title: 'Переводьте кількість в якість', content: 'Сідайте за кермо за першої-ліпшої можливості. Аби відчути себе спокійніше, частіше виїздіть за місто і тренуйтесь там. Інтенсивність руху менша, а відстані солідні. Словом, давайте собі можливість «накатати години». А краще — домовитись про додаткові заняття з водіння. Нині з цим також немає проблем.' },
@@ -21,6 +22,7 @@ const cards = [
 function App() {
     return (
         <div>
+            <AppNavbar/>
             <Carousel cards={cards} />
         </div>
     );
