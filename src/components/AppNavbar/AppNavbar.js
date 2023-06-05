@@ -1,18 +1,18 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import './AppNavbar.css';
-import homeIcon from '../../images/homeIcon.svg';
-import login from '../../images/login.svg';
-import logout from '../../images/logout.svg';
+import homeIcon from '../../assets/homeIcon.svg';
+import loginIcon from '../../assets/loginIcon.svg';
+import logoutIcon from '../../assets/logoutIcon.svg';
 import MyButton from "../UI/button/MyButton";
-import Logout from "../Authorization/Logout";
+import {logout} from "../../utils/logout";
 
 const AppNavbar = () => {
     const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem('token'));
 
     const handleLogout = () => {
         setLoggedIn(false);
-        Logout();
+        logout();
     }
 
     return (
@@ -50,12 +50,9 @@ const AppNavbar = () => {
                     </Link>
                 </li>
                 <li className="navbar-item">
-                    <Link className="navbar-link" to="/alcotester">Алкотестер</Link>
-                </li>
-                <li className="navbar-item">
-                    <Link className="navbar-link" to="/number-identifier">
+                    <Link className="navbar-link" to="/region-identifier">
                         <div className="multi-line-label">
-                            <span>Визначник</span><span>номерів</span>
+                            <span>Визначник регіону</span><span>за номером машини</span>
                         </div>
                     </Link>
                 </li>
@@ -67,13 +64,13 @@ const AppNavbar = () => {
                             <MyButton style={{margin: '5px'}}>Профіль</MyButton>
                         </Link>
                         <Link className="navbar-link" to="/" onClick={handleLogout}>
-                            <img src={logout} className="logoutImg" alt="logout"/>
+                            <img src={logoutIcon} className="logoutImg" alt="logout"/>
                         </Link>
                     </li>
                     :
                     <li className="navbar-item navbar-item-right">
                         <Link className="navbar-link" to="/authorization">
-                            <img src={login} className="loginImg" alt="login"/>
+                            <img src={loginIcon} className="loginImg" alt="login"/>
                         </Link>
                     </li>
                 }
