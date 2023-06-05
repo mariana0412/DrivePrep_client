@@ -189,7 +189,7 @@ const Exam = () => {
                                             <div className="question-image-container">
                                                 { currentQuestion.picturePath &&
                                                     <img
-                                                        src={process.env.PUBLIC_URL + `/question/2/1159_.jpg`}
+                                                        src={process.env.PUBLIC_URL + `/question/${currentQuestion.picturePath}`}
                                                         alt="Question Illustration"
                                                         className="question-image"
                                                     />
