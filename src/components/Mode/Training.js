@@ -198,6 +198,7 @@ const Training = () => {
     const handleNewQuestionsChange = () => setIsNewQuestionsChecked(!isNewQuestionsChecked);
 
     const handleSaveQuestion = async () => {
+        console.log(currentQuestion.picturePath)
         const userId = localStorage.getItem("userId");
         const questionId = currentQuestion.id;
 
@@ -256,7 +257,7 @@ const Training = () => {
                                             <div className="question-image-container">
                                                 { currentQuestion.picturePath &&
                                                     <img
-                                                        src={process.env.PUBLIC_URL + `/question/2/1159_.jpg`}
+                                                        src={process.env.PUBLIC_URL + `/question/${currentQuestion.picturePath}`}
                                                         alt="Question Illustration"
                                                         className="question-image"
                                                     />
