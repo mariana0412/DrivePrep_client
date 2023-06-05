@@ -1,0 +1,13 @@
+.card{
+    border: #A42E43 4px solid;
+    text-align: center;
+    align-items: center;
+    border-radius: 30px;
+    padding: 5px 15px;
+    font-size: 15px;
+}
+
+.card img{
+    height: 30%;
+    width: auto;
+}
