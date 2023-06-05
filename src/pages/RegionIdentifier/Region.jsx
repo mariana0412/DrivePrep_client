@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import classes from './Region.module.css'
-import MyButton from "../../components/UI/button/MyButton";
-import MyInput from "../../components/UI/input/MyInput";
 import Map from "../../assets/carNumberMap.svg"
+import MyButton from "../../components/UI/button/MyButton";
 import AppNavbar from "../../components/AppNavbar/AppNavbar";
+import MyInput from "../../components/UI/input/MyInput";
 
 
 const regionData = {
@@ -46,17 +46,15 @@ function RegionCodeApp() {
         setCode(e.target.value);
     };
 
-    function getRegionFromCode(code) {
-        const foundRegion = Object.entries(regionData).find(([codes]) =>
-            codes.includes(code)
+    const getRegionFromCode = (code) => {
+        const foundRegion = Object.entries(regionData).find(([region, codes]) =>
+            codes.includes(code.toUpperCase())
         );
-
         if (foundRegion) {
             return foundRegion[0];
         }
-
         return 'Такого коду не існує';
-    }
+    };
 
     const handleFormSubmit = (e) => {
         e.preventDefault();

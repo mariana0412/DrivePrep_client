@@ -18,7 +18,7 @@ const App = () => {
             <Routes>
                 <Route exact path="/" element={<Home/>}></Route>
                 <Route exact path="/tests" element={<Home/>}></Route>
-                <Route exact path="/profile" element={<EditPage id={"user1"}/>}></Route>
+                <Route exact path="/profile" element={<EditPage id={localStorage.getItem('userId')}/>}></Route>
                 <Route exact path="/questions-choice" element={<ModeSelection/>}></Route>
                 <Route exact path="/training" element={<Training/>}></Route>
                 <Route exact path="/authorization" element={<AuthorizationPage/>}></Route>
