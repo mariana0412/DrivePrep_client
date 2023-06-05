@@ -10,6 +10,7 @@ import Region from "./components/pages/Region";
 import SignPage from "./components/Card/SignPage";
 import Laws from "./components/Laws/Laws";
 import TipsPage from "./components/pages/TipsPage";
+import Fines from "./components/Fines/Fines";
 
 const App = () => {
     return (
@@ -25,6 +26,7 @@ const App = () => {
                 <Route exact path="/signs" element={<SignPage/>}></Route>
                 <Route exact path="/laws" element={<Laws/>}></Route>
                 <Route exact path="/study-materials" element={<TipsPage/>}></Route>
+                <Route exact path="/fines" element={<Fines/>}></Route>
             </Routes>
         </Router>
 
