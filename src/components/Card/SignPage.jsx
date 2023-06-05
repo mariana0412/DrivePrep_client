@@ -3,6 +3,7 @@ import Card from './Card';
 import classes from './SignPage.module.css';
 import List from './List';
 import InfoService from '../API/InfoService';
+import AppNavbar from "../AppNavbar/AppNavbar";
 
 const SignPage = () => {
     const [themes, setThemes] = useState([]);
@@ -44,6 +45,7 @@ const SignPage = () => {
 
     return (
         <div className={classes.signPage}>
+            <AppNavbar/>
             <div className={classes.cardContainer}>
                 {cardsData.map((card) => (
                     <Card

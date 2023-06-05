@@ -7,6 +7,7 @@ import AuthorizationPage from './components/Authorization/AuthorizationPage';
 import Exam from "./components/Mode/Exam";
 import EditPage from "./components/pages/EditPage";
 import Region from "./components/pages/Region";
+import SignPage from "./components/Card/SignPage";
 
 const App = () => {
     return (
@@ -19,6 +20,7 @@ const App = () => {
                 <Route exact path="/authorization" element={<AuthorizationPage/>}></Route>
                 <Route exact path="/exam" element={<Exam/>}></Route>
                 <Route exact path="/number-identifier" element={<Region/>}></Route>
+                <Route exact path="/signs" element={<SignPage/>}></Route>
             </Routes>
         </Router>
 

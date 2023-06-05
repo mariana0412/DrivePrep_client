@@ -43,6 +43,13 @@ const AppNavbar = () => {
                     <Link className="navbar-link" to="/laws">Закони</Link>
                 </li>
                 <li className="navbar-item">
+                    <Link className="navbar-link" to="/signs">
+                        <div className="multi-line-label">
+                            <span>Дорожні</span><span>знаки</span>
+                        </div>
+                    </Link>
+                </li>
+                <li className="navbar-item">
                     <Link className="navbar-link" to="/alcotester">Алкотестер</Link>
                 </li>
                 <li className="navbar-item">
