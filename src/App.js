@@ -11,6 +11,7 @@ import SignPage from "./pages/RoadSigns/SignPage";
 import Laws from "./pages/Laws/Laws";
 import TipsPage from "./pages/Tips/TipsPage";
 import Fines from "./pages/Fines/Fines";
+import Rules from "./pages/Rules/Rules";
 
 const App = () => {
     return (
@@ -28,6 +29,7 @@ const App = () => {
                 <Route exact path="/laws" element={<Laws/>}></Route>
                 <Route exact path="/study-materials" element={<TipsPage/>}></Route>
                 <Route exact path="/fines" element={<Fines/>}></Route>
+                <Route exact path="/rules" element={<Rules/>}></Route>
             </Routes>
         </Router>
 

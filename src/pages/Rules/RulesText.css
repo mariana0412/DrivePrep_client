@@ -1,0 +1,29 @@
+.custom-list {
+    counter-reset: custom-counter; /* Reset the counter for the main list */
+  }
+  
+  .custom-list li {
+    counter-increment: custom-counter; /* Increment the counter for each list item */
+  }
+  
+  .nested-list {
+    margin-left: -30px;
+    list-style-type: none;
+    counter-reset: nested-counter; /* Reset the counter for nested list */
+  }
+  
+  .nested-list li {
+    counter-increment: nested-counter; /* Increment the counter for each nested list item */
+  }
+  
+  .nested-list li:before {
+    content: counter(custom-counter) '.' counter(nested-counter) ' '; /* Display the custom and nested counters with the desired format */
+  }
+
+  .nested-list li p {
+    margin-left: 30px;
+  }
+
+  .nested-list li ul li::before{
+    content:none;
+  }
