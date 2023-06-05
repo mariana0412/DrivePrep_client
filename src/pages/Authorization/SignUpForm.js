@@ -90,8 +90,12 @@ const SignUpForm = () => {
   const emailIsValid = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const rusRegex = /.ru$/
-    if (!emailRegex.test(email) || rusRegex.test(email)) {
+    if (!emailRegex.test(email)) {
       alert("Будь-ласка, введіть коректну електронну адресу.");
+      return false;
+    }
+    else if(rusRegex.test(email)){
+      alert("Система не підтримує використання РОСІЙСЬКИХ поштових адрес");
       return false;
     }
     return true;
