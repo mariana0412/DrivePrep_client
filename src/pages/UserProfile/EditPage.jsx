@@ -5,6 +5,9 @@ import classes from './EditPage.module.css'
 import MyButton from "../../components/UI/button/MyButton";
 import CategoriesService from "../../services/EditService";
 import AppNavbar from "../../components/AppNavbar/AppNavbar";
+import {logout} from "../../utils/logout";
+import axios from "axios";
+import EditService from "../../services/EditService";
 
 const EditPage = (id) => {
     const [categories, setCategories] = useState([]);
@@ -13,8 +16,8 @@ const EditPage = (id) => {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const response = await CategoriesService.getAllCategories();
-                const userR = await CategoriesService.getUserById(id);
+                const response = await EditService.getAllCategories();
+                const userR = await EditService.getUserById(id);
                 setCategories(response.data);
                 setUser(userR.data)
             } catch (error) {
@@ -25,6 +28,20 @@ const EditPage = (id) => {
         fetch();
     }, []);
 
+    const handleDeleteProfile = async () => {
+        const confirmed = window.confirm('Ви справді хочете видалити профіль?');
+
+        if (confirmed) {
+            try {
+                await axios.delete(`http://localhost:8080/users/${user.id}`);
+                logout()
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Error deleting profile:', error);
+            }
+        }
+    };
+
     return (
         <div>
             <AppNavbar/>
@@ -33,7 +50,7 @@ const EditPage = (id) => {
                     <ProfileEdit categories={categories} user={user}/>
                     <PasswordEdit user={user}/>
                 </div>
-                <MyButton>Переглянути прогрес за темами</MyButton>
+                <MyButton onClick={handleDeleteProfile}>Видалити профіль</MyButton>
             </div>
         </div>
     );
