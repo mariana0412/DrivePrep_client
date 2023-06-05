@@ -32,6 +32,7 @@ const Training = () => {
 
     const [isNewQuestionsChecked, setIsNewQuestionsChecked] = useState(false);
     const [isSaved, setIsSaved] = useState(!!currentQuestion?.saved);
+    const [saveButtonClass, setSaveButtonClass] = useState(`save-button ${!!currentQuestion?.saved ? 'saved' : ''}`);
 
     const [showHint, setShowHint] = useState(false);
 
@@ -82,19 +83,28 @@ const Training = () => {
         return url;
     }
 
+    useEffect(() => {
+        setIsSaved(!!questions[currentQuestionIndex]?.saved);
+    }, [currentQuestionIndex, questions]);
+
+    useEffect(() => {
+        setSaveButtonClass(`save-button ${isSaved ? 'saved' : ''}`);
+    }, [isSaved]);
+
     const handleQuestionClick = (index) => {
         setIsAnswerChecked(false);
         setSelectedOption("");
-        setCurrentQuestionIndex(currentPage * QUESTIONS_PER_PAGE + index);
-        setIsSaved(!!questions[currentPage * QUESTIONS_PER_PAGE + index]?.saved)
+        const newIndex = currentPage * QUESTIONS_PER_PAGE + index;
+        setCurrentQuestionIndex(newIndex);
+        setIsSaved(!!questions[newIndex]?.saved);
         setShowHint(false);
     };
 
     const handleNextQuestionClick = () => {
-        if (currentQuestionIndex < questions.length - 1)
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
+        const newIndex = currentQuestionIndex + 1;
+        setCurrentQuestionIndex(newIndex);
         setIsAnswerChecked(false);
-        setIsSaved(!!questions[currentQuestionIndex + 1]?.saved);
+        setIsSaved(!!questions[newIndex]?.saved);
         setShowHint(false);
     };
 
@@ -198,7 +208,6 @@ const Training = () => {
     const handleNewQuestionsChange = () => setIsNewQuestionsChecked(!isNewQuestionsChecked);
 
     const handleSaveQuestion = async () => {
-        console.log(currentQuestion.picturePath)
         const userId = localStorage.getItem("userId");
         const questionId = currentQuestion.id;
 
@@ -207,11 +216,16 @@ const Training = () => {
                 await QuestionService.saveSavedQuestion(userId, questionId);
             else
                 await QuestionService.deleteSavedQuestion(userId, questionId);
+            const updatedQuestions = questions.map((question) => {
+                if (question.id === questionId)
+                    question.saved = !isSaved;
+                return question;
+            });
+            setQuestions(updatedQuestions);
             setIsSaved(!isSaved);
         } catch (error) {
             console.error("Error:", error);
         }
-        setIsSaved(!isSaved);
     }
 
     return (
@@ -231,7 +245,7 @@ const Training = () => {
                     <div className="childDiv question">
                         { localStorage.getItem("token")
                             &&
-                            <button className={`save-button ${!!currentQuestion?.saved ? 'saved' : ''}`} onClick={handleSaveQuestion}>
+                            <button className={saveButtonClass} onClick={handleSaveQuestion}>
                                 <FaSave/>
                             </button>
                         }

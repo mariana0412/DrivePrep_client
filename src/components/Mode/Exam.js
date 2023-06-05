@@ -4,6 +4,7 @@ import AppNavbar from "../AppNavbar/AppNavbar";
 import MyButton from "../UI/button/MyButton";
 import QuestionService from "../../services/QuestionService";
 import Variants from "./Variants";
+import {FaSave} from "react-icons/fa";
 
 const Exam = () => {
     const EXAM_TIME = 60 * 20;   // 20 minutes in seconds
@@ -29,6 +30,9 @@ const Exam = () => {
     const [showHint, setShowHint] = useState(false);
 
     const [score, setScore] = useState(0);
+
+    const [isSaved, setIsSaved] = useState(!!currentQuestion?.saved);
+    const [saveButtonClass, setSaveButtonClass] = useState(`save-button ${!!currentQuestion?.saved ? 'saved' : ''}`);
 
     useEffect(() => {
         let url = `/exam-questions`;
@@ -71,18 +75,25 @@ const Exam = () => {
         }
     }, [timer, isTimerFinished]);
 
+    useEffect(() => {
+        setIsSaved(!!questions[currentQuestionIndex]?.saved);
+    }, [currentQuestionIndex, questions]);
+
+    useEffect(() => {
+        setSaveButtonClass(`save-button ${isSaved ? 'saved' : ''}`);
+    }, [isSaved]);
+
     const handleQuestionClick = (index) => {
         setSelectedOption("");
         setCurrentQuestionIndex(index);
+        setIsSaved(!!questions[index]?.saved)
         setShowHint(false);
     };
 
     const handleNextQuestionClick = () => {
-        if (currentQuestionIndex < questions.length - 1)
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-
-        if (timer <= 0)
-            setShowModal(true);
+        const newIndex = currentQuestionIndex + 1;
+        setCurrentQuestionIndex(newIndex);
+        setIsSaved(!!questions[newIndex]?.saved)
         setShowHint(false);
     };
 
@@ -157,6 +168,27 @@ const Exam = () => {
         setScore(correctAnswers);
     };
 
+    const handleSaveQuestion = async () => {
+        const userId = localStorage.getItem("userId");
+        const questionId = currentQuestion.id;
+
+        try {
+            if (!isSaved)
+                await QuestionService.saveSavedQuestion(userId, questionId);
+            else
+                await QuestionService.deleteSavedQuestion(userId, questionId);
+            const updatedQuestions = questions.map((question) => {
+                if (question.id === questionId)
+                    question.saved = !isSaved;
+                return question;
+            });
+            setQuestions(updatedQuestions);
+            setIsSaved(!isSaved);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
     return (
         <div>
             <AppNavbar />
@@ -166,6 +198,12 @@ const Exam = () => {
 
             <div className="parentDiv">
                 <div className="childDiv question">
+                    { localStorage.getItem("token")
+                        &&
+                        <button className={saveButtonClass} onClick={handleSaveQuestion}>
+                            <FaSave/>
+                        </button>
+                    }
                     {currentQuestion && (
                         <form className="question-container">
                             <div>
