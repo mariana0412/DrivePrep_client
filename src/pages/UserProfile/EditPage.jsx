@@ -33,7 +33,7 @@ const EditPage = (id) => {
 
         if (confirmed) {
             try {
-                await axios.delete(`http://localhost:8080/users/${user.id}`);
+                await EditService.deleteUser(user.id)
                 logout()
                 window.location.href = '/';
             } catch (error) {
