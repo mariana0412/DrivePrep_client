@@ -6,7 +6,7 @@ export default class EditService {
     }
 
     static async getUserById(id) {
-        return await axios.get(`http://localhost:8080/users/${id.id}`);
+        return await axios.get(`http://localhost:8080/users/${id.user}`);
     }
 
     static async deleteUser(id){

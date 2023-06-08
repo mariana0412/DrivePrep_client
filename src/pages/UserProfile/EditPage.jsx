@@ -9,7 +9,7 @@ import {logout} from "../../utils/logout";
 import axios from "axios";
 import EditService from "../../services/EditService";
 
-const EditPage = (id) => {
+const EditPage = (u) => {
     const [categories, setCategories] = useState([]);
     const [user, setUser] = useState([]);
 
@@ -17,9 +17,11 @@ const EditPage = (id) => {
         const fetch = async () => {
             try {
                 const response = await EditService.getAllCategories();
-                const userR = await EditService.getUserById(id);
+                const userR = await EditService.getUserById(u);
+
                 setCategories(response.data);
                 setUser(userR.data)
+
             } catch (error) {
                 console.error('Error fetching categories:', error);
             }
