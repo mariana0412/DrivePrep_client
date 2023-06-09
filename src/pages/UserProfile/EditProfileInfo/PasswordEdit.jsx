@@ -41,8 +41,10 @@ const PasswordEdit = ({ user }) => {
                 newPassword: newPassword
             });
 
-            if (response.status === 200)
+            if (response.status === 200) {
                 alert("Пароль змінено успішно!");
+                clearFields();
+            }
             else
                 alert("Не вийшло змінити пароль.");
         } catch (error) {
@@ -76,6 +78,12 @@ const PasswordEdit = ({ user }) => {
         else if(!differentOldAndNewPasswords)
             alert("Старий і новий паролі ідентичні");
         return false;
+    }
+
+    const clearFields = () => {
+        setOldPassword('');
+        setNewPassword('');
+        setRepeatPassword('');
     }
 
     const getErrorCode = (responseData) => {
