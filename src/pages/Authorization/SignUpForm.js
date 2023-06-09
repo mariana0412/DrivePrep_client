@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import MyButton from "../../components/UI/button/MyButton";
 import { Label, Input } from "reactstrap";
+import {
+  passwordLengthIsValid,
+  repeatPasswordIsEqualToPassword,
+  nameAndSurnameAreNotEmpty, emailFormatIsValid, emailIsRu
+} from "../../utils/userDataValidation";
 
 const SignUpForm = () => {
   const [surname, setSurname] = useState("");
@@ -33,7 +38,7 @@ const SignUpForm = () => {
   };
 
   const handleSignUp = () => {
-    if(!passwordIsValid() || !emailIsValid())
+    if(!nameIsValid() || !emailIsValid() || !passwordIsValid())
       return;
 
     const userData = {
@@ -69,37 +74,37 @@ const SignUpForm = () => {
         });
   };
 
-  const passwordIsValid = () => passwordLengthIsValid() && repeatPasswordIsEqualToPassword();
-
-  const passwordLengthIsValid = () => {
-    if (password.length < 8) {
+  const passwordIsValid = () => {
+    const validLength = passwordLengthIsValid(password);
+    const repeatPasswordIsEqual = repeatPasswordIsEqualToPassword(password, repeatPassword);
+    if(validLength && repeatPasswordIsEqual)
+      return true;
+    else if(!validLength)
       alert("Пароль має мати більш ніж 8 символів!");
-      return false;
-    }
-    return true;
-  }
-
-  const repeatPasswordIsEqualToPassword = () => {
-    if (password !== repeatPassword) {
+    else if(!repeatPasswordIsEqual)
       alert("Паролі не збігаються!");
-      return false;
-    }
-    return true;
+    return false;
   }
 
   const emailIsValid = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const rusRegex = /.ru$/
-    if (!emailRegex.test(email)) {
+    const validEmailFormat = emailFormatIsValid(email);
+    const ruEmail = emailIsRu(email);
+    if(validEmailFormat && !ruEmail)
+      return true;
+    else if(!validEmailFormat)
       alert("Будь-ласка, введіть коректну електронну адресу.");
-      return false;
-    }
-    else if(rusRegex.test(email)){
+    else if(ruEmail)
       alert("Система не підтримує використання РОСІЙСЬКИХ поштових адрес");
+    return false;
+  }
+
+  const nameIsValid = () => {
+    if(!nameAndSurnameAreNotEmpty(name, surname)) {
+      alert("Ім'я та прізвище є обов'язковими.");
       return false;
     }
     return true;
-  }
+  };
 
   const clearInputFields = () => {
     setSurname("");
