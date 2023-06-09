@@ -46,7 +46,7 @@ const PasswordEdit = ({ user }) => {
                 clearFields();
             }
             else
-                alert("Не вийшло змінити пароль.");
+                alert("Не вийшло змінити пароль...");
         } catch (error) {
             if (error.response) {
                 const responseData = error.response.data;
@@ -54,11 +54,11 @@ const PasswordEdit = ({ user }) => {
                 const errorCode = getErrorCode(responseData);
 
                 if (statusCode === 400 && errorCode === "ERR001")
-                    alert("Неправильний старий пароль.");
+                    alert("Неправильний старий пароль!");
                 else if (statusCode === 400 && errorCode === "ERR002")
-                    alert("Новий пароль не відповідає вимогам.");
+                    alert("Новий пароль коротший за 8 символів!");
                 else
-                    alert("Не вийшло змінити пароль.");
+                    alert("Не вийшло змінити пароль...");
             }
         }
         setLoading(false);
@@ -76,7 +76,7 @@ const PasswordEdit = ({ user }) => {
         else if(!repeatPasswordIsEqual)
             alert("Паролі не збігаються!");
         else if(!differentOldAndNewPasswords)
-            alert("Старий і новий паролі ідентичні");
+            alert("Старий і новий паролі ідентичні!");
         return false;
     }
 
