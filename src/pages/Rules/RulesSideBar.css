@@ -1,8 +1,12 @@
 .my-link {
-    color: #A42E43;
-    text-decoration: underline;
-  }
+  color: #a42e43;
+  text-decoration: underline;
+}
 
-.chapter{
+.chapter {
   font-size: 13px;
+}
+
+html {
+  scroll-behavior: smooth;
 }
