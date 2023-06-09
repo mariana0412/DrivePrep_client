@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import MyButton from "../../components/UI/button/MyButton";
 import { Label, Input } from "reactstrap";
-import {passwordLengthIsValid, repeatPasswordIsEqualToPassword, emailIsValid} from "../../utils/userDataValidation";
+import {
+  passwordLengthIsValid,
+  repeatPasswordIsEqualToPassword,
+  nameAndSurnameAreNotEmpty, emailFormatIsValid, emailIsRu
+} from "../../utils/userDataValidation";
 
 const SignUpForm = () => {
   const [surname, setSurname] = useState("");
@@ -34,7 +38,7 @@ const SignUpForm = () => {
   };
 
   const handleSignUp = () => {
-    if(!passwordIsValid() || !emailIsValid(email))
+    if(!nameIsValid() || !emailIsValid() || !passwordIsValid())
       return;
 
     const userData = {
@@ -79,7 +83,28 @@ const SignUpForm = () => {
       alert("Пароль має мати більш ніж 8 символів!");
     else if(!repeatPasswordIsEqual)
       alert("Паролі не збігаються!");
+    return false;
   }
+
+  const emailIsValid = () => {
+    const validEmailFormat = emailFormatIsValid(email);
+    const ruEmail = emailIsRu(email);
+    if(validEmailFormat && !ruEmail)
+      return true;
+    else if(!validEmailFormat)
+      alert("Будь-ласка, введіть коректну електронну адресу.");
+    else if(ruEmail)
+      alert("Система не підтримує використання РОСІЙСЬКИХ поштових адрес");
+    return false;
+  }
+
+  const nameIsValid = () => {
+    if(!nameAndSurnameAreNotEmpty(name, surname)) {
+      alert("Ім'я та прізвище є обов'язковими.");
+      return false;
+    }
+    return true;
+  };
 
   const clearInputFields = () => {
     setSurname("");
