@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import MyButton from "../../components/UI/button/MyButton";
 import { Label, Input } from "reactstrap";
+import {passwordLengthIsValid, repeatPasswordIsEqualToPassword, emailIsValid} from "../../utils/userDataValidation";
 
 const SignUpForm = () => {
   const [surname, setSurname] = useState("");
@@ -33,7 +34,7 @@ const SignUpForm = () => {
   };
 
   const handleSignUp = () => {
-    if(!passwordIsValid() || !emailIsValid())
+    if(!passwordIsValid() || !emailIsValid(email))
       return;
 
     const userData = {
@@ -69,36 +70,15 @@ const SignUpForm = () => {
         });
   };
 
-  const passwordIsValid = () => passwordLengthIsValid() && repeatPasswordIsEqualToPassword();
-
-  const passwordLengthIsValid = () => {
-    if (password.length < 8) {
+  const passwordIsValid = () => {
+    const validLength = passwordLengthIsValid(password);
+    const repeatPasswordIsEqual = repeatPasswordIsEqualToPassword(password, repeatPassword);
+    if(validLength && repeatPasswordIsEqual)
+      return true;
+    else if(!validLength)
       alert("Пароль має мати більш ніж 8 символів!");
-      return false;
-    }
-    return true;
-  }
-
-  const repeatPasswordIsEqualToPassword = () => {
-    if (password !== repeatPassword) {
+    else if(!repeatPasswordIsEqual)
       alert("Паролі не збігаються!");
-      return false;
-    }
-    return true;
-  }
-
-  const emailIsValid = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const rusRegex = /.ru$/
-    if (!emailRegex.test(email)) {
-      alert("Будь-ласка, введіть коректну електронну адресу.");
-      return false;
-    }
-    else if(rusRegex.test(email)){
-      alert("Система не підтримує використання РОСІЙСЬКИХ поштових адрес");
-      return false;
-    }
-    return true;
   }
 
   const clearInputFields = () => {

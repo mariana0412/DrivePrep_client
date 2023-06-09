@@ -3,6 +3,11 @@ import axios from 'axios';
 import MyInput from "../../../components/UI/input/MyInput";
 import MyButton from "../../../components/UI/button/MyButton";
 import classes from "./PasswordEdit.module.css";
+import {
+    oldAndNewPasswordsAreDifferent,
+    passwordLengthIsValid,
+    repeatPasswordIsEqualToPassword
+} from "../../../utils/userDataValidation";
 
 
 const PasswordEdit = ({ user }) => {
@@ -24,10 +29,8 @@ const PasswordEdit = ({ user }) => {
     };
 
     const handleChangePassword = async () => {
-        if (newPassword !== repeatPassword) {
-            alert("New password and repeat password do not match");
+        if(!passwordIsValid())
             return;
-        }
 
         setLoading(true);
 
@@ -38,25 +41,47 @@ const PasswordEdit = ({ user }) => {
                 newPassword: newPassword
             });
 
-
-            if (response.status === 200) {
-                alert("Password changed successfully");
-            } else {
-                alert("Failed to change password");
-            }
+            if (response.status === 200)
+                alert("Пароль змінено успішно!");
+            else
+                alert("Не вийшло змінити пароль.");
         } catch (error) {
-            if (error.response && error.response.status === 404) {
-                alert("User not found");
-            } else if (error.response && error.response.status === 400) {
-                alert("Invalid old password");
-            } else {
-                console.error("Failed to change password:", error);
-                alert("Failed to change password");
+            if (error.response) {
+                const responseData = error.response.data;
+                const statusCode = error.response.status;
+                const errorCode = getErrorCode(responseData);
+
+                if (statusCode === 400 && errorCode === "ERR001")
+                    alert("Неправильний старий пароль.");
+                else if (statusCode === 400 && errorCode === "ERR002")
+                    alert("Новий пароль не відповідає вимогам.");
+                else
+                    alert("Не вийшло змінити пароль.");
             }
         }
-
         setLoading(false);
     };
+
+    const passwordIsValid = () => {
+        const validLength = passwordLengthIsValid(newPassword);
+        const repeatPasswordIsEqual = repeatPasswordIsEqualToPassword(newPassword, repeatPassword);
+        const differentOldAndNewPasswords = oldAndNewPasswordsAreDifferent(oldPassword, newPassword);
+
+        if(validLength && repeatPasswordIsEqual && differentOldAndNewPasswords)
+            return true;
+        else if(!validLength)
+            alert("Пароль має мати більш ніж 8 символів!");
+        else if(!repeatPasswordIsEqual)
+            alert("Паролі не збігаються!");
+        else if(!differentOldAndNewPasswords)
+            alert("Старий і новий паролі ідентичні");
+        return false;
+    }
+
+    const getErrorCode = (responseData) => {
+        const errorParts = responseData.split(":");
+        return errorParts[0].trim();
+    }
 
     return (
         <div className={classes.container}>
