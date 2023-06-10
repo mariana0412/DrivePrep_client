@@ -1,16 +1,21 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import MyButton from "../../components/UI/button/MyButton";
 import { Label, Input } from 'reactstrap';
 import {useNavigate} from "react-router-dom";
 import jwt_decode from 'jwt-decode';
+import CustomAlert from "../../components/CustomAlert/CustomAlert";
 
 const SignIn = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const navigate = useNavigate();
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+
     const handleUserNameChange = (e) => setEmail(e.target.value);
     const handlePasswordChange = (e) => setPassword(e.target.value);
-    const navigate = useNavigate();
 
     const handleSignIn = () => {
         const userData = {
@@ -37,8 +42,10 @@ const SignIn = () => {
                 navigate('/');
             })
             .catch((error) => {
-                if (error.message === "400")
-                    alert("Неправильний логін або пароль.");
+                if (error.message === "400") {
+                    setModalMessage("Неправильний логін або пароль.");
+                    openModal();
+                }
                 else
                     console.error(error);
             });
@@ -59,6 +66,9 @@ const SignIn = () => {
         setEmail("");
         setPassword("");
     }
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -93,6 +103,11 @@ const SignIn = () => {
                     Увійти
                 </MyButton>
             </div>
+            <CustomAlert
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                message={modalMessage}
+            />
         </div>
     );
 };

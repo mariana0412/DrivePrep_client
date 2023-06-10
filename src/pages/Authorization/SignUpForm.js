@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MyButton from "../../components/UI/button/MyButton";
 import { Label, Input } from "reactstrap";
 import {
@@ -6,6 +6,7 @@ import {
   repeatPasswordIsEqualToPassword,
   nameAndSurnameAreNotEmpty, emailFormatIsValid, emailIsRu
 } from "../../utils/userDataValidation";
+import CustomAlert from "../../components/CustomAlert/CustomAlert";
 
 const SignUpForm = () => {
   const [surname, setSurname] = useState("");
@@ -15,6 +16,9 @@ const SignUpForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   const handleSurnameChange = (e) => setSurname(e.target.value);
   const handleNameChange = (e) => setName(e.target.value);
@@ -59,7 +63,8 @@ const SignUpForm = () => {
     })
         .then((response) => {
           if (response.ok) {
-            alert(`${name}, ласкаво просимо до DrivePrep! Тепер Ви можете ввійти у Ваш профіль.`);
+            setModalMessage(`${name}, ласкаво просимо до DrivePrep! Тепер Ви можете ввійти у Ваш профіль.`);
+            openModal();
             clearInputFields();
           } else {
             throw new Error(response.status);
@@ -67,7 +72,8 @@ const SignUpForm = () => {
         })
         .catch((error) => {
           if (error.message === "400") {
-            alert("Ця електронна пошта вже використовується. Будь ласка, увійдіть у Ваш аккаунт.");
+            setModalMessage("Ця електронна пошта вже використовується. Будь ласка, увійдіть у Ваш аккаунт.");
+            openModal();
           } else {
             console.error(error);
           }
@@ -79,10 +85,13 @@ const SignUpForm = () => {
     const repeatPasswordIsEqual = repeatPasswordIsEqualToPassword(password, repeatPassword);
     if(validLength && repeatPasswordIsEqual)
       return true;
-    else if(!validLength)
-      alert("Пароль має мати більш ніж 8 символів!");
+
+    if(!validLength)
+      setModalMessage("Пароль має мати більш ніж 8 символів!");
     else if(!repeatPasswordIsEqual)
-      alert("Паролі не збігаються!");
+      setModalMessage("Паролі не збігаються!");
+    openModal();
+
     return false;
   }
 
@@ -91,16 +100,20 @@ const SignUpForm = () => {
     const ruEmail = emailIsRu(email);
     if(validEmailFormat && !ruEmail)
       return true;
-    else if(!validEmailFormat)
-      alert("Будь-ласка, введіть коректну електронну адресу.");
+
+    if(!validEmailFormat)
+      setModalMessage("Будь-ласка, введіть коректну електронну адресу.");
     else if(ruEmail)
-      alert("Система не підтримує використання РОСІЙСЬКИХ поштових адрес");
+      setModalMessage("Система не підтримує використання РОСІЙСЬКИХ поштових адрес");
+    openModal();
+
     return false;
   }
 
   const nameIsValid = () => {
     if(!nameAndSurnameAreNotEmpty(name, surname)) {
-      alert("Ім'я та прізвище є обов'язковими.");
+      setModalMessage("Ім'я та прізвище є обов'язковими.");
+      openModal();
       return false;
     }
     return true;
@@ -114,6 +127,9 @@ const SignUpForm = () => {
     setPassword("");
     setRepeatPassword("");
   }
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <div>
@@ -223,6 +239,11 @@ const SignUpForm = () => {
           Зареєструватись
         </MyButton>
       </div>
+      <CustomAlert
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          message={modalMessage}
+      />
     </div>
   );
 };
