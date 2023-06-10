@@ -9,8 +9,9 @@ import {handleSaveQuestion} from "../../../utils/handleSaveQuestion";
 import {formatTimer} from "../../../utils/formatTimer";
 import {calculateExamScore} from "../../../utils/calculateExamScore";
 
+export const EXAM_TIME = 20 * 60;   // 20 minutes in seconds
+
 const Exam = () => {
-    const EXAM_TIME = 60 * 20;   // 20 minutes in seconds
 
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -61,9 +62,21 @@ const Exam = () => {
     }, [category, complexity]);
 
     useEffect(() => {
+        const storedTimer = localStorage.getItem("timer");
+        if (storedTimer) {
+            const storedTimerValue = parseInt(storedTimer, 10);
+            setTimer(storedTimerValue);
+        }
+    }, []);
+
+    useEffect(() => {
         const interval = setInterval(() => {
             if (isTimerRunning) {
-                setTimer(prevTimer => prevTimer - 1);
+                setTimer((prevTimer) => {
+                    const newTimer = prevTimer - 1;
+                    localStorage.setItem("timer", newTimer.toString());
+                    return newTimer;
+                });
             }
         }, 1000);
 
