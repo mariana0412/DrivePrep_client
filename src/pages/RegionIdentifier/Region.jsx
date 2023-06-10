@@ -76,7 +76,7 @@ function RegionCodeApp() {
             <div className={classes.container}>
                 <div className={classes.column}>
                     <img className={classes.logo} src={Map} alt="Region" />
-                    <p>Визначте до якого регіону належить автомобіль, за його номерним знаком</p>
+                    <p>Визначте, до якого регіону належить автомобіль, за його номерним знаком</p>
                 </div>
                 <div className={classes.column}>
 
