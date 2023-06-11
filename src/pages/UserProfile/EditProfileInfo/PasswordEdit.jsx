@@ -8,13 +8,18 @@ import {
     passwordLengthIsValid,
     repeatPasswordIsEqualToPassword
 } from "../../../utils/userDataValidation";
+import CustomAlert from "../../../components/CustomAlert/CustomAlert";
 
 
 const PasswordEdit = ({ user }) => {
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
+
     const [loading, setLoading] = useState(false);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
 
     const handleOldPasswordChange = (event) => {
         setOldPassword(event.target.value);
@@ -42,11 +47,11 @@ const PasswordEdit = ({ user }) => {
             });
 
             if (response.status === 200) {
-                alert("Пароль змінено успішно!");
+                setModalMessage("Пароль змінено успішно!");
                 clearFields();
             }
             else
-                alert("Не вийшло змінити пароль...");
+                setModalMessage("Не вийшло змінити пароль...");
         } catch (error) {
             if (error.response) {
                 const responseData = error.response.data;
@@ -54,13 +59,14 @@ const PasswordEdit = ({ user }) => {
                 const errorCode = getErrorCode(responseData);
 
                 if (statusCode === 400 && errorCode === "ERR001")
-                    alert("Неправильний старий пароль!");
+                    setModalMessage("Неправильний старий пароль!");
                 else if (statusCode === 400 && errorCode === "ERR002")
-                    alert("Новий пароль коротший за 8 символів!");
+                    setModalMessage("Новий пароль коротший за 8 символів!");
                 else
-                    alert("Не вийшло змінити пароль...");
+                    setModalMessage("Не вийшло змінити пароль...");
             }
         }
+        openModal();
         setLoading(false);
     };
 
@@ -71,12 +77,15 @@ const PasswordEdit = ({ user }) => {
 
         if(validLength && repeatPasswordIsEqual && differentOldAndNewPasswords)
             return true;
-        else if(!validLength)
-            alert("Пароль має мати більш ніж 8 символів!");
+
+        if(!validLength)
+            setModalMessage("Пароль має мати більш ніж 8 символів!");
         else if(!repeatPasswordIsEqual)
-            alert("Паролі не збігаються!");
+            setModalMessage("Паролі не збігаються!");
         else if(!differentOldAndNewPasswords)
-            alert("Старий і новий паролі ідентичні!");
+            setModalMessage("Старий і новий паролі ідентичні!");
+        openModal();
+
         return false;
     }
 
@@ -90,6 +99,9 @@ const PasswordEdit = ({ user }) => {
         const errorParts = responseData.split(":");
         return errorParts[0].trim();
     }
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
     return (
         <div className={classes.container}>
@@ -110,6 +122,11 @@ const PasswordEdit = ({ user }) => {
                     {loading ? "Зміна пароля..." : "Змінити пароль"}
                 </MyButton>
             </div>
+            <CustomAlert
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                message={modalMessage}
+            />
         </div>
     );
 };

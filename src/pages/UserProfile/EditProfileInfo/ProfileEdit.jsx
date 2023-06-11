@@ -4,12 +4,16 @@ import classes from "./ProfileEdit.module.css";
 import MyButton from "../../../components/UI/button/MyButton";
 import MySelect from "../../../components/UI/MySelect/MySelect";
 import {emailFormatIsValid, emailIsRu, nameAndSurnameAreNotEmpty} from "../../../utils/userDataValidation";
+import CustomAlert from "../../../components/CustomAlert/CustomAlert";
 
 const ProfileEdit = ({ categories, user }) => {
     const [newSurname, setNewSurname] = useState('');
     const [newName, setNewName] = useState('');
     const [newCategoryId, setNewCategoryId] = useState('');
     const [newEmail, setNewEmail] = useState('');
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
 
     useEffect(() => {
         if (user) {
@@ -41,11 +45,12 @@ const ProfileEdit = ({ categories, user }) => {
         })
             .then(response => {
                 if (response.ok)
-                   alert('Інформація змінена успішно!');
+                    setModalMessage('Інформація змінена успішно!');
                 else if(response.status === 400)
-                    alert('Ця електронна адреса вже використовується!');
+                    setModalMessage('Ця електронна адреса вже використовується!');
                 else
-                    alert("Не вийшло змінити інформацію...")
+                    setModalMessage("Не вийшло змінити інформацію...")
+                openModal();
             })
             .catch(error => {
                 console.error('Не вийшло змінити інформацію:', error);
@@ -58,20 +63,27 @@ const ProfileEdit = ({ categories, user }) => {
 
         if(validEmailFormat && !ruEmail)
             return true;
-        else if(!validEmailFormat)
-            alert("Будь-ласка, введіть коректну електронну адресу.");
+
+        if(!validEmailFormat)
+            setModalMessage("Будь-ласка, введіть коректну електронну адресу.");
         else if(ruEmail)
-            alert("Система не підтримує використання РОСІЙСЬКИХ поштових адрес");
+            setModalMessage("Система не підтримує використання РОСІЙСЬКИХ поштових адрес");
+        openModal();
+
         return false;
     }
 
     const nameIsValid = () => {
         if(!nameAndSurnameAreNotEmpty(newName, newSurname)) {
-            alert("Ім'я та прізвище є обов'язковими.");
+            setModalMessage("Ім'я та прізвище є обов'язковими.");
+            openModal();
             return false;
         }
         return true;
     };
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
     return (
         <div className={classes.container}>
@@ -107,6 +119,11 @@ const ProfileEdit = ({ categories, user }) => {
                 </div>
             </div>
             <MyButton isWhite onClick={handleProfileUpdate}>Зберегти зміни</MyButton>
+            <CustomAlert
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                message={modalMessage}
+            />
         </div>
     );
 };

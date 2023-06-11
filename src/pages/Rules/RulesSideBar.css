@@ -1,0 +1,12 @@
+.my-link {
+  color: #a42e43;
+  text-decoration: underline;
+}
+
+.chapter {
+  font-size: 13px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
