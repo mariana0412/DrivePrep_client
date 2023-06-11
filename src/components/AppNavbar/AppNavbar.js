@@ -50,6 +50,9 @@ const AppNavbar = () => {
                     </Link>
                 </li>
                 <li className="navbar-item">
+                    <Link className="navbar-link" to="/alcotester">Алкотестер</Link>
+                </li>
+                <li className="navbar-item">
                     <Link className="navbar-link" to="/region-identifier">
                         <div className="multi-line-label">
                             <span>Визначник регіону</span><span>за номерами авто</span>

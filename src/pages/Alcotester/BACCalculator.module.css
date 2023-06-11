@@ -1,0 +1,27 @@
+.alcoholPageColumn {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20%;
+}
+
+
+.column{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 10%;
+}
+
+.myPage{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 150px;
+}
+
+.page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
