@@ -11,6 +11,7 @@ import SignPage from "./pages/RoadSigns/SignPage";
 import Laws from "./pages/Laws/Laws";
 import TipsPage from "./pages/Tips/TipsPage";
 import Fines from "./pages/Fines/Fines";
+import BACCalculator from "./pages/Alcotester/BACCalculator";
 
 const App = () => {
     return (
@@ -27,10 +28,10 @@ const App = () => {
                 <Route exact path="/signs" element={<SignPage/>}></Route>
                 <Route exact path="/laws" element={<Laws/>}></Route>
                 <Route exact path="/study-materials" element={<TipsPage/>}></Route>
+                <Route exact path="/alcotester" element={<BACCalculator/>}></Route>
                 <Route exact path="/fines" element={<Fines/>}></Route>
             </Routes>
         </Router>
-
   );
 }
 
