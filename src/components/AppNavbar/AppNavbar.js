@@ -52,7 +52,7 @@ const AppNavbar = () => {
                 <li className="navbar-item">
                     <Link className="navbar-link" to="/region-identifier">
                         <div className="multi-line-label">
-                            <span>Визначник регіону</span><span>за номером машини</span>
+                            <span>Визначник регіону</span><span>за номерами авто</span>
                         </div>
                     </Link>
                 </li>

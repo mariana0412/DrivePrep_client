@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {useEffect, useState} from "react";
 import "./ModeSelection.css";
 import MyButton from "../../components/UI/button/MyButton";
+import {EXAM_TIME} from "../Questions/Exam/Exam";
 
 const ModeSelection = () => {
     const [selectedComplexity, setSelectedComplexity] = useState("");
@@ -23,6 +24,7 @@ const ModeSelection = () => {
     const handleExamButtonClick = () => {
         let url = `/exam`;
         let urlToRedirect = determineUrlParams(url);
+        localStorage.setItem("timer", EXAM_TIME.toString());
         navigate(urlToRedirect);
     }
 
