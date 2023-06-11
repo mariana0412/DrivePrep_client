@@ -8,6 +8,7 @@ import {FaSave} from "react-icons/fa";
 import {handleSaveQuestion} from "../../../utils/handleSaveQuestion";
 import {formatTimer} from "../../../utils/formatTimer";
 import {calculateExamScore} from "../../../utils/calculateExamScore";
+import CustomAlert from "../../../components/CustomAlert/CustomAlert";
 
 export const EXAM_TIME = 20 * 60;   // 20 minutes in seconds
 
@@ -165,7 +166,8 @@ const Exam = () => {
         setIsFinished(true);
         setIsTimerRunning(false);
         setScore(calculateExamScore(answersCorrect));
-        setShowModal(true);
+
+       setShowModal(true);
     }
 
     const handleSaveQuestionClick = () => handleSaveQuestion(isSaved, currentQuestion, questions, setQuestions, setIsSaved);
@@ -257,15 +259,13 @@ const Exam = () => {
                         <h1>{formatTimer(timer)}</h1>
                     </div>
                     {
-                        showModal
-                        &&
-                        <div className="modal">
-                            <div className="modal-content">
-                                <h2>Кінець! {score}/20</h2>
-                                <p>{finishExamText}</p>
-                                {score >= 18 ? `Вітаємо! Ви склали іспит!` : `На жаль, Ви  не склали іспит...`}
-                            </div>
-                        </div>
+                        showModal &&
+                        <CustomAlert
+                            isOpen={showModal}
+                            onClose={() => setShowModal(false)}
+                            message={`Кінець! ${score}/20\n${finishExamText}\n${score >= 18 ? 'Вітаємо! Ви склали іспит!' : 'На жаль, Ви не склали іспит...'} `}
+                        />
+
                     }
                 </div>
             </div>
