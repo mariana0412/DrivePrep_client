@@ -16,8 +16,10 @@ import Rules from "./pages/Rules/Rules";
 
 const App = () => {
     return (
+        // Set up the router for routing functionality
         <Router>
             <Routes>
+                {/* Define the routes and their associated components */}
                 <Route exact path="/" element={<Home/>}></Route>
                 <Route exact path="/tests" element={<Home/>}></Route>
                 <Route exact path="/profile" element={<EditPage/>}></Route>

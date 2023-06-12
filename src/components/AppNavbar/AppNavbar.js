@@ -7,14 +7,21 @@ import logoutIcon from '../../assets/logoutIcon.svg';
 import MyButton from "../UI/button/MyButton";
 import {logout} from "../../utils/logout";
 
+/**
+ * The AppNavbar component is responsible for rendering the navigation bar in the application.
+ * It includes links to different pages and handles the logout process.
+ */
 const AppNavbar = () => {
+    // State to keep track of the login status
     const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem('token'));
 
+    // Function to handle logout
     const handleLogout = () => {
         setLoggedIn(false);
         logout();
     }
 
+    // Render the navigation bar
     return (
         <nav className="navbar">
             <ul className="navbar-list">
@@ -60,6 +67,7 @@ const AppNavbar = () => {
                     </Link>
                 </li>
 
+                {/* Display profile button and logout button if logged in, otherwise show login button */}
                 { loggedIn
                     ?
                     <li className="navbar-item navbar-item-right">

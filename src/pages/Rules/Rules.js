@@ -2,6 +2,11 @@ import AppNavbar from "../../components/AppNavbar/AppNavbar";
 import RulesSideBar from "./RulesSideBar";
 import RulesText from "./RulesText";
 
+/**
+ * Define Rules component
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const Rules = () => {
   return (
     <div>

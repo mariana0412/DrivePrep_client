@@ -8,6 +8,7 @@ import AppNavbar from "../../components/AppNavbar/AppNavbar";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 
 function BACCalculator() {
+    // Initialize the state for the input fields and other variables
     const [age, setAge] = useState('');
     const [gender, setGender] = useState('');
     const [weight, setWeight] = useState('');
@@ -20,9 +21,9 @@ function BACCalculator() {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
-
+// This function is responsible for calculating the blood alcohol content
     const calculateAlcoholLevel = () => {
-
+        // Validations for input fields
         if (age === '') {
             setModalMessage('Будь ласка, вкажіть вік');
             openModal();
@@ -79,15 +80,16 @@ function BACCalculator() {
             return;
         }
 
-
+        // Blood alcohol content calculation
         const r = gender === 'male' ? 0.68 : 0.55;
         const alcoholConsumed = (drinkVolume * drinkStrength) / 100;
-
         const alcoholLevel = (0.806 * alcoholConsumed * 1.2) / (weight * r) - (0.017 * timeSinceDrinking);
 
+        // Determine intoxication stage and if it's safe to drive
         let intoxicationStage = '';
         let canDrive = true;
 
+        // Statements that determine intoxicationStage and canDrive
         if(alcoholLevel < 0.3){
             intoxicationStage = 'Природний рівень';
         }
@@ -108,6 +110,7 @@ function BACCalculator() {
             canDrive = false;
         }
 
+        // Setting the result and showing it in the modal
         const result = {
             intoxicationStage,
             canDrive,
@@ -118,12 +121,13 @@ function BACCalculator() {
         openModal();
     };
 
-
+    // Options for gender select input
     const genderOptions = [
         {value: 'male', name: 'Чоловік'},
         {value: 'female', name: 'Жінка'},
     ];
 
+    // Rendering the component
     return (
         <div>
             <AppNavbar/>
@@ -138,7 +142,6 @@ function BACCalculator() {
                     <div className={classes.page}>
                         <div className={classes.column}>
                             <div>
-
                                 <p>Вік:</p>
                                 <MyInput type="number" value={age} onChange={(e) => setAge(e.target.value)}/>
 

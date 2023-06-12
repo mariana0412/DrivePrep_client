@@ -7,11 +7,13 @@ import AppNavbar from "../../components/AppNavbar/AppNavbar";
 import {logout} from "../../utils/logout";
 import EditService from "../../services/EditService";
 
+// EditPage component definition.
 const EditPage = () => {
     const [categories, setCategories] = useState([]);
     const [user, setUser] = useState([]);
     const id = localStorage.getItem('userId');
 
+    // Fetching categories and user data on component mount.
     useEffect(() => {
         const fetch = async () => {
             try {
@@ -27,6 +29,7 @@ const EditPage = () => {
         fetch();
     }, []);
 
+    // Handling the deletion of the user's profile.
     const handleDeleteProfile = async () => {
         const confirmed = window.confirm('Ви справді хочете видалити профіль?');
 
@@ -41,6 +44,7 @@ const EditPage = () => {
         }
     };
 
+    // Rendering the EditPage component.
     return (
         <div>
             <AppNavbar/>

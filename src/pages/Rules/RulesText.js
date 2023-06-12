@@ -254,6 +254,8 @@ import eight_14 from "../../assets/images/8_14.png";
 import eight_16 from "../../assets/images/8_16.png";
 import eight_18 from "../../assets/images/8_18.png";
 //#endregion
+
+// Define test for rules
 const RulesText = () => {
   return (
     <div>

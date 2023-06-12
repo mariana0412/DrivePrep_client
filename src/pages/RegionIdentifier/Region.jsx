@@ -5,7 +5,7 @@ import MyButton from "../../components/UI/button/MyButton";
 import AppNavbar from "../../components/AppNavbar/AppNavbar";
 import MyInput from "../../components/UI/input/MyInput";
 
-
+// Data for mapping region codes to region names.
 const regionData = {
     'Автономна Республіка Крим': ['AK', 'KK', '01'],
     'Вінницька область': ['AB', 'KB','02'],
@@ -38,6 +38,7 @@ const regionData = {
 
 };
 
+// Map to normalize input characters.
 const characterMap = {
     А: 'A',
     В: 'B',
@@ -53,20 +54,24 @@ const characterMap = {
     Х:'X',
 };
 
+// Function to normalize input by replacing Ukrainian characters with their corresponding Latin characters.
 const normalizeInput = (input) => {
     const normalizedInput = input.toUpperCase();
     return normalizedInput.replace(/[А-ЯІЇ]/g, (match) => characterMap[match]);
 };
 
-
+// RegionCodeApp component definition.
 function RegionCodeApp() {
+    // State variables to track the code and region.
     const [code, setCode] = useState('');
     const [region, setRegion] = useState('');
 
+    // Event handler for code change.
     const handleCodeChange = (e) => {
         setCode(e.target.value);
     };
 
+    // Function to get the region name from the code.
     const getRegionFromCode = (code) => {
 
         const normalizedCode = normalizeInput(code);
@@ -80,6 +85,7 @@ function RegionCodeApp() {
         return 'Такого коду не існує';
     };
 
+    // Event handler for form submission.
     const handleFormSubmit = (e) => {
         e.preventDefault();
 
@@ -94,6 +100,7 @@ function RegionCodeApp() {
 
     };
 
+    // Render the RegionCodeApp component.
     return (
         <div>
             <AppNavbar/>

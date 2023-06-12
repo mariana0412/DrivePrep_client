@@ -8,18 +8,23 @@ import {
 } from "../../utils/userDataValidation";
 import CustomAlert from "../../components/CustomAlert/CustomAlert";
 
+/**
+ * Define a functional component called SignUpForm.
+ * @returns {JSX.Element}
+ */
 const SignUpForm = () => {
+  // Initialize state variables for form fields and modal.
   const [surname, setSurname] = useState("");
   const [name, setName] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(2); // category B
+  const [selectedCategory, setSelectedCategory] = useState(2); // Default category is B
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
 
+  // Define handler functions to update state when form fields change.
   const handleSurnameChange = (e) => setSurname(e.target.value);
   const handleNameChange = (e) => setName(e.target.value);
   const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
@@ -27,12 +32,14 @@ const SignUpForm = () => {
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleRepeatPasswordChange = (e) => setRepeatPassword(e.target.value);
 
+  // Fetch categories when component is mounted.
   useEffect(() => {
     fetch(`/categories`)
       .then((response) => response.json())
       .then((data) => setCategoryOptions(data));
   }, []);
 
+  // Function to render category options for the select input.
   const renderCategoryOptions = () => {
     return categoryOptions.map((option) => (
       <option key={option.id} value={option.id}>
@@ -41,6 +48,7 @@ const SignUpForm = () => {
     ));
   };
 
+  // Function that handles sign up when the sign-up button is clicked.
   const handleSignUp = () => {
     if(!nameIsValid() || !emailIsValid() || !passwordIsValid())
       return;
@@ -54,6 +62,7 @@ const SignUpForm = () => {
       password: password,
     };
 
+    // Make a POST request to the server with user data.
     fetch("http://localhost:8080/register", {
       method: "POST",
       headers: {
@@ -80,6 +89,7 @@ const SignUpForm = () => {
         });
   };
 
+  // Validation functions for password and email.
   const passwordIsValid = () => {
     const validLength = passwordLengthIsValid(password);
     const repeatPasswordIsEqual = repeatPasswordIsEqualToPassword(password, repeatPassword);
@@ -119,6 +129,7 @@ const SignUpForm = () => {
     return true;
   };
 
+  // Function to clear input fields.
   const clearInputFields = () => {
     setSurname("");
     setName("");
@@ -128,9 +139,11 @@ const SignUpForm = () => {
     setRepeatPassword("");
   }
 
+  // Functions to control the modal.
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  // The JSX that will be rendered for this component.
   return (
     <div>
       <div

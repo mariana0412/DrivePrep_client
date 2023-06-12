@@ -1,3 +1,4 @@
+// Service for work with questions: saving solved, saving saved, deleting saved
 export default class QuestionService {
     static async saveSolvedQuestion(userId, questionId, isCorrect) {
         const solvedQuestion = {

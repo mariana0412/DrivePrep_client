@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * Define FinesTable with table of fines
+ * @returns {JSX.Element}
+ */
 const FinesTable = () => {
     return (
         <div className="table-container">
