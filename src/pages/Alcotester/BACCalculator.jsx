@@ -91,12 +91,12 @@ function BACCalculator() {
         if(alcoholLevel < 0.3){
             intoxicationStage = 'Природний рівень';
         }
-       else if (alcoholLevel < 0.5) {
+        else if (alcoholLevel < 0.5) {
             intoxicationStage = 'Незначний вплив';
         }  else if (alcoholLevel >= 0.5 && alcoholLevel < 1.5) {
             intoxicationStage = 'Легке сп\'яніння';
         }
-       else if (alcoholLevel >= 1.5 && alcoholLevel < 2.5) {
+        else if (alcoholLevel >= 1.5 && alcoholLevel < 2.5) {
             intoxicationStage = 'Середнє сп\'яніння';
         }else if (alcoholLevel >= 2.5 && alcoholLevel < 3) {
             intoxicationStage = 'Сильне сп\'яніння';
@@ -114,6 +114,8 @@ function BACCalculator() {
         };
 
         setResult(result);
+        setModalMessage(`Стадія оп\'яніння: ${result.intoxicationStage}; Чи можна сідати за кермо: ${result.canDrive ? 'Так' : 'Ні'}`);
+        openModal();
     };
 
 
@@ -132,7 +134,7 @@ function BACCalculator() {
                     <div>
                         <img src={Image} alt="Image"/>
                         <p>Визначте рівень вмісту алкоголю в крові на основі введених даних</p>
-                       </div>
+                    </div>
                     <div className={classes.page}>
                         <div className={classes.column}>
                             <div>
@@ -177,20 +179,13 @@ function BACCalculator() {
                 </div>
 
 
-                {result && (
-                 <div>
-                        <h3>Результат:</h3>
-                        <p>Стадія оп'яніння: {result.intoxicationStage}</p>
-                        <p>Чи можна сідати за кермо: {result.canDrive ? 'Так' : 'Ні'}</p>
-                    </div>
-                )}
             </div>
             <CustomAlert
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 message={modalMessage}
             />
-            </div>
+        </div>
     );
 }
 
