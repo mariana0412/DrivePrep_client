@@ -16,4 +16,5 @@
     padding: 20px 40px;
     border-radius: 4px;
     text-align: center;
+    white-space: pre-line;
 }
