@@ -1,8 +1,13 @@
 import AppNavbar from '../../components/AppNavbar/AppNavbar';
 import LawText from "./LawText";
 
+/**
+ * Define the Laws component
+ * @returns {JSX.Element}
+ */
 const Laws = () => {
 
+    // Return JSX that renders the AppNavbar followed by LawText component
     return (
         <div>
             <AppNavbar/>

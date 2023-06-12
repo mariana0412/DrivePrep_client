@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// Service for operations needed to edit user data
 export default class EditService {
     static async getAllCategories() {
         return await axios.get('http://localhost:8080/categories');

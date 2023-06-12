@@ -1,9 +1,12 @@
 import {useEffect, useState} from "react";
 
+// Variants component definition. It receives various props such as currentQuestion, selectedOption, etc.
 const Variants = ({ currentQuestion, selectedOption, currentQuestionIndex, checkAnswer,
                           examMode, examFinished, selectedAnswers }) => {
+    // State for storing the shuffled variants of the current question.
     const [shuffledVariants, setShuffledVariants] = useState([]);
 
+    // useEffect hook that gets called whenever currentQuestion changes.
     useEffect(() => {
         const variants = [currentQuestion.answer, currentQuestion.var1];
         if (currentQuestion.var2)
@@ -13,6 +16,7 @@ const Variants = ({ currentQuestion, selectedOption, currentQuestionIndex, check
         setShuffledVariants(shuffleVariants(variants));
     }, [currentQuestion]);
 
+    // Function to shuffle an array of variants.
     const shuffleVariants = (variants) => {
         const shuffledVariants = [...variants];
         for (let i = shuffledVariants.length - 1; i > 0; i--) {
@@ -22,6 +26,7 @@ const Variants = ({ currentQuestion, selectedOption, currentQuestionIndex, check
         return shuffledVariants;
     }
 
+    // Function to determine the CSS class name of each variant.
     const variantClassName = (item) => {
         let variantClass = `variant answer-label `;
         let userAnswer = selectedOption;
@@ -41,6 +46,7 @@ const Variants = ({ currentQuestion, selectedOption, currentQuestionIndex, check
         return variantClass;
     }
 
+    // Render the component
     return (
         <ul className="variants">
             {shuffledVariants.map((item) => {

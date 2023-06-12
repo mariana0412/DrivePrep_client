@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import classes from "./carousel.module.css"
 
+// Define Carousel component for TipsPage
 const Carousel = ({ cards }) => {
     const [activeIndex, setActiveIndex] = useState(0);
 

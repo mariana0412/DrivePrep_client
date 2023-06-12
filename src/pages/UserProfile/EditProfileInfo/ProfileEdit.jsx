@@ -6,6 +6,7 @@ import MySelect from "../../../components/UI/MySelect/MySelect";
 import {emailFormatIsValid, emailIsRu, nameAndSurnameAreNotEmpty} from "../../../utils/userDataValidation";
 import CustomAlert from "../../../components/CustomAlert/CustomAlert";
 
+// Profile Edit - component of EditPage
 const ProfileEdit = ({ categories, user }) => {
     const [newSurname, setNewSurname] = useState('');
     const [newName, setNewName] = useState('');
@@ -15,6 +16,7 @@ const ProfileEdit = ({ categories, user }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
 
+    // Updating state variables with user data on component mount.
     useEffect(() => {
         if (user) {
             setNewSurname(user.surname || '');
@@ -24,6 +26,7 @@ const ProfileEdit = ({ categories, user }) => {
         }
     }, [user]);
 
+    // Handling the profile update.
     const handleProfileUpdate = () => {
         const profileUpdatePayload = {
             id: user.id,
@@ -57,6 +60,7 @@ const ProfileEdit = ({ categories, user }) => {
             });
     };
 
+    // Validating the email format and email language.
     const emailIsValid = () => {
         const validEmailFormat = emailFormatIsValid(newEmail);
         const ruEmail = emailIsRu(newEmail);
@@ -73,6 +77,7 @@ const ProfileEdit = ({ categories, user }) => {
         return false;
     }
 
+    // Validating the name and surname fields.
     const nameIsValid = () => {
         if(!nameAndSurnameAreNotEmpty(newName, newSurname)) {
             setModalMessage("Ім'я та прізвище є обов'язковими.");
@@ -82,9 +87,11 @@ const ProfileEdit = ({ categories, user }) => {
         return true;
     };
 
+    // Opening and closing the modal.
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
+    // Rendering the ProfileEdit component.
     return (
         <div className={classes.container}>
 

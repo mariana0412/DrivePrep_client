@@ -10,7 +10,7 @@ import {
 } from "../../../utils/userDataValidation";
 import CustomAlert from "../../../components/CustomAlert/CustomAlert";
 
-
+// Password Edit - component of EditPage
 const PasswordEdit = ({ user }) => {
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -21,18 +21,22 @@ const PasswordEdit = ({ user }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
 
+    // Handling changes in the old password field.
     const handleOldPasswordChange = (event) => {
         setOldPassword(event.target.value);
     };
 
+    // Handling changes in the new password field.
     const handleNewPasswordChange = (event) => {
         setNewPassword(event.target.value);
     };
 
+    // Handling changes in the repeat password field.
     const handleRepeatPasswordChange = (event) => {
         setRepeatPassword(event.target.value);
     };
 
+    // Handling the password change.
     const handleChangePassword = async () => {
         if(!passwordIsValid())
             return;
@@ -70,6 +74,7 @@ const PasswordEdit = ({ user }) => {
         setLoading(false);
     };
 
+    // Validating the password fields.
     const passwordIsValid = () => {
         const validLength = passwordLengthIsValid(newPassword);
         const repeatPasswordIsEqual = repeatPasswordIsEqualToPassword(newPassword, repeatPassword);
@@ -89,20 +94,24 @@ const PasswordEdit = ({ user }) => {
         return false;
     }
 
+    // Clearing the password fields.
     const clearFields = () => {
         setOldPassword('');
         setNewPassword('');
         setRepeatPassword('');
     }
 
+    // Extracting the error code from the error response data.
     const getErrorCode = (responseData) => {
         const errorParts = responseData.split(":");
         return errorParts[0].trim();
     }
 
+    // Opening and closing the modal.
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
+    // Rendering the PasswordEdit component.
     return (
         <div className={classes.container}>
             <div>

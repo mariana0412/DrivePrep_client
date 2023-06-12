@@ -5,11 +5,18 @@ import SignsList from './SignsList';
 import InfoService from '../../services/InfoService';
 import AppNavbar from "../../components/AppNavbar/AppNavbar";
 
+/**
+ * SignPage component definition.
+ * @returns {JSX.Element}
+ */
 const SignPage = () => {
+
+    // State variables to track themes, selected theme, and cards data.
     const [themes, setThemes] = useState([]);
     const [selectedThemeId, setSelectedThemeId] = useState(null);
     const [cardsData, setCardsData] = useState([]);
 
+    // Fetching themes from the InfoService API.
     useEffect(() => {
         const fetchThemes = async () => {
             try {
@@ -24,6 +31,7 @@ const SignPage = () => {
         fetchThemes();
     }, []);
 
+    // Fetching cards data based on the selected theme.
     useEffect(() => {
         const fetchCardsData = async () => {
             try {
@@ -39,10 +47,12 @@ const SignPage = () => {
         }
     }, [selectedThemeId]);
 
+    // Event handler for theme selection.
     const handleThemeClick = (themeId) => {
         setSelectedThemeId(themeId);
     };
 
+    // Render the SignPage component.
     return (
         <div className={classes.signPage}>
             <AppNavbar/>

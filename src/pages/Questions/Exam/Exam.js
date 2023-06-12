@@ -10,10 +10,15 @@ import {formatTimer} from "../../../utils/formatTimer";
 import {calculateExamScore} from "../../../utils/calculateExamScore";
 import CustomAlert from "../../../components/CustomAlert/CustomAlert";
 
-export const EXAM_TIME = 20 * 60;   // 20 minutes in seconds
+// Define the exam time in seconds (20 minutes)
+export const EXAM_TIME = 20 * 60;
 
+/**
+ * Define the Exam component
+ * @returns {JSX.Element}
+ */
 const Exam = () => {
-
+    // Define state variables for questions, timer, selected options, and more
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const currentQuestion = questions[currentQuestionIndex];
@@ -21,10 +26,6 @@ const Exam = () => {
     const [answersCorrect, setAnswersCorrect] = useState({});
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const searchParams = new URLSearchParams(window.location.search);
-    const complexity = searchParams.get("complexity");
-    const category = searchParams.get("category");
 
     const [isFinished, setIsFinished] = useState(false);
     const [isTimerFinished, setIsTimerFinished] = useState(false);
@@ -41,6 +42,12 @@ const Exam = () => {
     const [isSaved, setIsSaved] = useState(!!currentQuestion?.saved);
     const [saveButtonClass, setSaveButtonClass] = useState(`save-button ${!!currentQuestion?.saved ? 'saved' : ''}`);
 
+    // Retrieve complexity and category parameters from the URL
+    const searchParams = new URLSearchParams(window.location.search);
+    const complexity = searchParams.get("complexity");
+    const category = searchParams.get("category");
+
+    // Fetch questions based on category and complexity level from server
     useEffect(() => {
         let url = `/exam-questions`;
         url += `?categoryId=${category}`;
@@ -62,6 +69,7 @@ const Exam = () => {
             });
     }, [category, complexity]);
 
+    // Load timer from local storage if available
     useEffect(() => {
         const storedTimer = localStorage.getItem("timer");
         if (storedTimer) {
@@ -70,6 +78,7 @@ const Exam = () => {
         }
     }, []);
 
+    // Countdown timer logic
     useEffect(() => {
         const interval = setInterval(() => {
             if (isTimerRunning) {
@@ -84,6 +93,7 @@ const Exam = () => {
         return () => clearInterval(interval);
     }, [isTimerRunning]);
 
+    // Check if timer is finished and end the exam
     useEffect(() => {
         if (timer <= 0 && !isTimerFinished) {
             setIsTimerFinished(true);
@@ -94,14 +104,17 @@ const Exam = () => {
         }
     }, [timer, isTimerFinished, answersCorrect]);
 
+    // Logic to check if the current question is saved
     useEffect(() => {
         setIsSaved(!!questions[currentQuestionIndex]?.saved);
     }, [currentQuestionIndex, questions]);
 
+    // Change save button class based on whether the question is saved
     useEffect(() => {
         setSaveButtonClass(`save-button ${isSaved ? 'saved' : ''}`);
     }, [isSaved]);
 
+    // handling click on pagination logic
     const handleQuestionClick = (index) => {
         setSelectedOption("");
         setCurrentQuestionIndex(index);
@@ -109,6 +122,7 @@ const Exam = () => {
         setShowHint(false);
     };
 
+    // handling next question click logic
     const handleNextQuestionClick = () => {
         const newIndex = currentQuestionIndex + 1;
         setCurrentQuestionIndex(newIndex);
@@ -116,6 +130,7 @@ const Exam = () => {
         setShowHint(false);
     };
 
+    // checking answer and saving answer logic
     const checkAnswer = (item) => {
         if (isFinished)
             return;
@@ -141,6 +156,7 @@ const Exam = () => {
         }
     };
 
+    // pagination logic
     const renderPagination = () => {
         return (
             <>
@@ -162,6 +178,7 @@ const Exam = () => {
         );
     };
 
+    // clicking on Finish button logic
     const handleFinishButtonClick = () => {
         setIsFinished(true);
         setIsTimerRunning(false);
@@ -169,8 +186,10 @@ const Exam = () => {
         openModal();
     }
 
+    // saving question
     const handleSaveQuestionClick = () => handleSaveQuestion(isSaved, currentQuestion, questions, setQuestions, setIsSaved);
 
+    // forms message which will be shown in Custom Modal
     const formModalMessage = () => {
         let modalMessage = `Кінець!\n${score}/20`;
 
@@ -185,9 +204,11 @@ const Exam = () => {
         return modalMessage;
     }
 
+    // open/close custom modal
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
+    // JSX to render the Exam component
     return (
         <div>
             <AppNavbar />

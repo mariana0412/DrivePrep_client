@@ -1,5 +1,6 @@
 import classes from './Card.module.css';
 
+// Define Card component for Carousel
 const Card = ({ image, title, description }) => {
 
     return (

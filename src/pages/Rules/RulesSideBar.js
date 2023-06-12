@@ -2,16 +2,19 @@ import React from "react";
 import { HashLink as Link } from "react-router-hash-link";
 import "./RulesSideBar.css";
 
+// RulesSideBar component definition.
 const RulesSideBar = () => {
   return (
     <div>
       <div>
         <ol>
+          {/* List item for the first chapter */}
           <li className="chapter">
             <Link to="#1" className="my-link">
               Загальні положення
             </Link>
           </li>
+          {/* List items for the remaining chapters */}
           <li className="chapter">
             <Link to="#2" className="my-link">
               Обов'язки і права водіїв механічних транспортних засобів

@@ -5,22 +5,28 @@ import "./ModeSelection.css";
 import MyButton from "../../components/UI/button/MyButton";
 import {EXAM_TIME} from "../Questions/Exam/Exam";
 
+// ModeSelection component definition.
 const ModeSelection = () => {
+    // State variables to track the selected complexity and category.
     const [selectedComplexity, setSelectedComplexity] = useState("");
     const [selectedCategory, setSelectedCategory] = useState(2); // category B
     const [categoryOptions, setCategoryOptions] = useState([]);
 
+    // Event handlers for complexity and category changes.
     const handleComplexityChange = (e) => setSelectedComplexity(e.target.value);
     const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
 
+    // Navigate hook for programmatically navigating to different routes.
     const navigate = useNavigate();
 
+    // Event handler for the start button click.
     const handleStartButtonClick = () => {
         let url = `/training`;
         const urlToRedirect = determineUrlParams(url);
         navigate(urlToRedirect);
     }
 
+    // Event handler for the exam button click.
     const handleExamButtonClick = () => {
         let url = `/exam`;
         let urlToRedirect = determineUrlParams(url);
@@ -28,16 +34,19 @@ const ModeSelection = () => {
         navigate(urlToRedirect);
     }
 
+    // Event handler for the mistakes button click.
     const handleMistakesButtonClick = () => {
         const url = `/training?mode=mistakes`;
         navigate(url);
     }
 
+    // Event handler for the saved button click.
     const handleSavedButtonClick = () => {
         const url = `/training?mode=saved`;
         navigate(url);
     }
 
+    // Function to determine the URL parameters based on the selected complexity and category.
     const determineUrlParams = (baseUrl) => {
         const categoryId = determineCategoryId();
         baseUrl += `?category=${categoryId}`;
@@ -47,17 +56,20 @@ const ModeSelection = () => {
         return baseUrl;
     }
 
+    // Function to determine the category ID to use in the URL.
     const determineCategoryId = () => {
         const userCategoryId = localStorage.getItem("userCategoryId");
         return userCategoryId ? userCategoryId : selectedCategory;
     }
 
+    // useEffect hook to fetch the category options.
     useEffect(() => {
         fetch(`/categories`)
             .then(response => response.json())
             .then(data => setCategoryOptions(data));
     }, []);
 
+    // Array of complexity options.
     const complexityOptions = [
         { value: "", label: "Будь-яка" },
         { value: "1", label: "Легка" },
@@ -66,6 +78,7 @@ const ModeSelection = () => {
         { value: "4", label: "Дуже складна" }
     ];
 
+    // Function to render the complexity options as <option> elements.
     const renderComplexityOptions = () => {
         return complexityOptions.map(option => (
             <option key={option.value} value={option.value}>
@@ -74,6 +87,7 @@ const ModeSelection = () => {
         ));
     };
 
+    // Function to render the category options as <option> elements.
     const renderCategoryOptions = () => {
         return categoryOptions.map(option => (
             <option key={option.id} value={option.id}>
@@ -82,6 +96,7 @@ const ModeSelection = () => {
         ));
     };
 
+    // Render the ModeSelection component.
     return (
         <Container className="my-page-container">
             <div className="centered-content">

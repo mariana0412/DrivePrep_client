@@ -1,6 +1,10 @@
 import React from 'react';
 import "./LawText.css";
 
+/**
+ * Contains names and text of laws and links to them
+ * @returns {JSX.Element}
+ */
 const LawText = () => {
     return (
         <div>
