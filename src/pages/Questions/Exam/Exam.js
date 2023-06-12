@@ -20,7 +20,7 @@ const Exam = () => {
     const [selectedOption, setSelectedOption] = useState("");
     const [answersCorrect, setAnswersCorrect] = useState({});
 
-    const [showModal, setShowModal] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const searchParams = new URLSearchParams(window.location.search);
     const complexity = searchParams.get("complexity");
@@ -90,7 +90,7 @@ const Exam = () => {
             setIsFinished(true);
             setFinishExamText("Час вичерпався.")
             setScore(calculateExamScore(answersCorrect));
-            setShowModal(true);
+            openModal();
         }
     }, [timer, isTimerFinished, answersCorrect]);
 
@@ -166,11 +166,27 @@ const Exam = () => {
         setIsFinished(true);
         setIsTimerRunning(false);
         setScore(calculateExamScore(answersCorrect));
-
-       setShowModal(true);
+        openModal();
     }
 
     const handleSaveQuestionClick = () => handleSaveQuestion(isSaved, currentQuestion, questions, setQuestions, setIsSaved);
+
+    const formModalMessage = () => {
+        let modalMessage = `Кінець!\n${score}/20`;
+
+        if(finishExamText)
+            modalMessage += `\n${finishExamText}`;
+
+        if(score >= 18)
+            modalMessage += `\nВітаємо! Ви склали іспит!`;
+        else
+            modalMessage += `\nНа жаль, Ви не склали іспит...`;
+
+        return modalMessage;
+    }
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
     return (
         <div>
@@ -258,15 +274,13 @@ const Exam = () => {
                     <div className="timer">
                         <h1>{formatTimer(timer)}</h1>
                     </div>
-                    {
-                        showModal &&
-                        <CustomAlert
-                            isOpen={showModal}
-                            onClose={() => setShowModal(false)}
-                            message={`Кінець! ${score}/20\n${finishExamText}\n${score >= 18 ? 'Вітаємо! Ви склали іспит!' : 'На жаль, Ви не склали іспит...'} `}
-                        />
 
-                    }
+                    <CustomAlert
+                        isOpen={isModalOpen}
+                        onClose={closeModal}
+                        message={formModalMessage()}
+                    />
+
                 </div>
             </div>
         </div>
